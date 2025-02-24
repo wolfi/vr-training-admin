@@ -1,0 +1,169 @@
+// templates/components/observers/form.templ
+//go:generate templ
+
+package observers
+
+import (
+    "github.com/a-h/templ"
+    templruntime "github.com/a-h/templ/runtime"
+
+    "fmt"
+    "github.com/saladinomario/vr-training-admin/internal/models"
+)
+
+// ObserverForm renders a form to create or edit an observer.
+func ObserverForm(obs models.Observer, isEdit bool) templ.Component {
+    return templruntime.GeneratedTemplate(func(in templruntime.GeneratedComponentInput) (err error) {
+        w, ctx := in.Writer, in.Context
+        if ctx.Err() != nil {
+            return ctx.Err()
+        }
+
+        title := "Create New Observer"
+        formAction := ` hx-post="/observers"`
+
+        if isEdit {
+            title = fmt.Sprintf("Edit Observer: %s", obs.Name)
+            formAction = fmt.Sprintf(` hx-put="/observers/%s"`, obs.ID)
+        }
+
+        _, _ = w.Write([]byte(`
+<div class="card bg-base-100 shadow-xl">
+  <div class="card-body">
+    <h2 class="card-title">` + title + `</h2>
+    <form ` + formAction + ` 
+          hx-target="#main-content" 
+          hx-swap="outerHTML" 
+          class="space-y-6">
+      
+      <!-- Basic Info -->
+      <div class="form-control w-full">
+        <label class="label">
+          <span class="label-text">Observer Name</span>
+        </label>
+        <input type="text" name="name" value="` + templ.EscapeString(obs.Name) + `" 
+               placeholder="Give this observer a descriptive name" 
+               class="input input-bordered w-full" required>
+      </div>
+
+      <!-- Feedback Style -->
+      <div class="form-control w-full">
+        <label class="label">
+          <span class="label-text">Feedback Style</span>
+        </label>
+        <input type="text" name="feedback_style" value="` + templ.EscapeString(obs.FeedbackStyle) + `" 
+               placeholder="e.g. Encouraging, Direct, Socratic..." 
+               class="input input-bordered w-full">
+      </div>
+
+      <!-- Interruption Triggers -->
+      <div class="form-control w-full">
+        <label class="label">
+          <span class="label-text">Interruption Triggers</span>
+        </label>
+        <input type="text" name="interruption_triggers" value="` + templ.EscapeString(obs.InterruptionTriggers) + `" 
+               placeholder="Comma-separated triggers..." 
+               class="input input-bordered w-full">
+      </div>
+
+      <!-- Intervention Frequency -->
+      <div class="form-control w-full">
+        <label class="label">
+          <span class="label-text">Intervention Frequency (1-10)</span>
+        </label>
+        <input type="number" name="intervention_frequency" 
+               value="` + fmt.Sprintf("%d", obs.InterventionFrequency) + `"
+               min="1" max="10" step="1" 
+               class="input input-bordered w-full">
+      </div>
+
+      <!-- KPI, Scoring, Achievements -->
+      <div class="space-y-2">
+        <label class="label">
+          <span class="label-text">Key Performance Indicators</span>
+        </label>
+        <textarea name="kpis" class="textarea textarea-bordered" 
+                  placeholder="List relevant KPIs...">` + templ.EscapeString(obs.KeyPerformanceIndicators) + `</textarea>
+      </div>
+
+      <div class="space-y-2">
+        <label class="label">
+          <span class="label-text">Scoring System</span>
+        </label>
+        <input type="text" name="scoring_system" value="` + templ.EscapeString(obs.ScoringSystem) + `"
+               placeholder="Points-based, star ratings, etc." 
+               class="input input-bordered w-full">
+      </div>
+
+      <div class="space-y-2">
+        <label class="label">
+          <span class="label-text">Required Achievements</span>
+        </label>
+        <textarea name="required_achievements" class="textarea textarea-bordered" 
+                  placeholder="Define the achievements to succeed...">` + templ.EscapeString(obs.RequiredAchievements) + `</textarea>
+      </div>
+
+      <div class="space-y-2">
+        <label class="label">
+          <span class="label-text">Failed State Definitions</span>
+        </label>
+        <textarea name="failed_states" class="textarea textarea-bordered" 
+                  placeholder="What triggers a 'failure' in training?">` + templ.EscapeString(obs.FailedStateDefinitions) + `</textarea>
+      </div>
+
+      <!-- Feedback & Report -->
+      <div class="space-y-2">
+        <label class="label">
+          <span class="label-text">Real-Time Feedback Rules</span>
+        </label>
+        <textarea name="realtime_rules" class="textarea textarea-bordered" 
+                  placeholder="When does the observer interrupt or comment?">` + templ.EscapeString(obs.RealTimeFeedbackRules) + `</textarea>
+      </div>
+
+      <div class="space-y-2">
+        <label class="label">
+          <span class="label-text">Post-Session Report Template</span>
+        </label>
+        <textarea name="report_template" class="textarea textarea-bordered" 
+                  placeholder="Template for the final report.">` + templ.EscapeString(obs.PostSessionReportTemplate) + `</textarea>
+      </div>
+
+      <div class="space-y-2">
+        <label class="label">
+          <span class="label-text">Learning Points Focus</span>
+        </label>
+        <input type="text" name="learning_focus" value="` + templ.EscapeString(obs.LearningPointsFocus) + `"
+               placeholder="e.g. Empathy, clarifying questions, etc." 
+               class="input input-bordered w-full">
+      </div>
+
+      <div class="space-y-2">
+        <label class="label">
+          <span class="label-text">Improvement Suggestions Style</span>
+        </label>
+        <input type="text" name="improvement_style" value="` + templ.EscapeString(obs.ImprovementSuggestionsStyle) + `"
+               placeholder="Bullet points, step-by-step, or direct advice..." 
+               class="input input-bordered w-full">
+      </div>
+
+      <!-- Actions -->
+      <div class="card-actions justify-end">
+        <a href="/observers" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-primary">
+`))
+        if isEdit {
+            _, _ = w.Write([]byte(`Save Changes`))
+        } else {
+            _, _ = w.Write([]byte(`Create Observer`))
+        }
+        _, _ = w.Write([]byte(`
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+`))
+        return nil
+    })
+}

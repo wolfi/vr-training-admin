@@ -1,4 +1,3 @@
-// cmd/server/main.go
 package main
 
 import (
@@ -25,6 +24,10 @@ func setupRoutes() *http.ServeMux {
 	// Register avatar routes
 	handlers.SetupAvatarRoutes(mux)
 	registeredRoutes = append(registeredRoutes, "/avatar-lab -> SetupAvatarRoutes")
+
+	// Register observer routes
+	handlers.SetupObserverRoutes(mux)
+	registeredRoutes = append(registeredRoutes, "/observers -> SetupObserverRoutes")
 
 	// Serve static files
 	fs := http.FileServer(http.Dir("static"))

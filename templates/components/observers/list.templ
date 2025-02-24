@@ -1,0 +1,81 @@
+// templates/components/observers/list.templ
+//go:generate templ
+
+package observers
+
+import (
+	"fmt"
+
+	"github.com/a-h/templ"
+	templruntime "github.com/a-h/templ/runtime"
+
+	"github.com/saladinomario/vr-training-admin/internal/models"
+)
+
+// ObserverList displays a table of observers.
+func ObserverList(obsList []models.Observer) templ.Component {
+	return templruntime.GeneratedTemplate(func(in templruntime.GeneratedComponentInput) (err error) {
+		w, ctx := in.Writer, in.Context
+		if ctx.Err() != nil {
+			return ctx.Err()
+		}
+
+		// Start rendering
+		_, _ = w.Write([]byte(`
+<div class="overflow-x-auto">
+  <table class="table w-full">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Feedback Style</th>
+        <th>Intervention Frequency</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+`))
+		if len(obsList) == 0 {
+			_, _ = w.Write([]byte(`
+      <tr><td colspan="4" class="text-center py-4">No observers found. Create your first one!</td></tr>
+`))
+		} else {
+			for _, obs := range obsList {
+				_, _ = w.Write([]byte(`
+      <tr>
+        <td>`))
+				_, _ = w.Write([]byte(templ.EscapeString(obs.Name)))
+				_, _ = w.Write([]byte(`</td>
+        <td>`))
+				_, _ = w.Write([]byte(templ.EscapeString(obs.FeedbackStyle)))
+				_, _ = w.Write([]byte(`</td>
+        <td>`))
+				_, _ = w.Write([]byte(templ.EscapeString(fmt.Sprintf("%d", obs.InterventionFrequency))))
+				_, _ = w.Write([]byte(`</td>
+        <td>
+          <div class="flex gap-2">
+            <a href="/observers/edit/`))
+				_, _ = w.Write([]byte(templ.EscapeString(obs.ID)))
+				_, _ = w.Write([]byte(`" class="btn btn-xs btn-primary">Edit</a>
+            <button 
+              hx-delete="/observers/`))
+				_, _ = w.Write([]byte(templ.EscapeString(obs.ID)))
+				_, _ = w.Write([]byte(`" 
+              hx-confirm="Are you sure you want to delete this observer?"
+              hx-target="#observer-list"
+              class="btn btn-xs btn-error">
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+`))
+			}
+		}
+		_, _ = w.Write([]byte(`
+    </tbody>
+  </table>
+</div>
+`))
+		return nil
+	})
+}
