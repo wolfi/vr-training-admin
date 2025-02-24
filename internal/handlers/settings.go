@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/a-h/templ"
 	"github.com/saladinomario/vr-training-admin/internal/models"
 	"github.com/saladinomario/vr-training-admin/templates/components/settings"
 	"github.com/saladinomario/vr-training-admin/templates/pages"
@@ -226,5 +227,43 @@ func SetupSettingsRoutes(mux *http.ServeMux) {
 	log.Println("  Registering route: /settings/test-connection")
 	mux.HandleFunc("/settings/test-connection", TestConnectionHandler)
 
+	// Provider fields
+	log.Println("  Registering route: /settings/provider-fields")
+	mux.HandleFunc("/settings/provider-fields", ProviderFieldsHandler)
+
 	log.Println("Settings routes registered successfully")
+}
+
+// ProviderFieldsHandler handles returning provider-specific fields
+func ProviderFieldsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Get the selected provider from query params
+	provider := r.URL.Query().Get("provider")
+	if provider == "" {
+		http.Error(w, "Provider is required", http.StatusBadRequest)
+		return
+	}
+
+	// Get current settings to preserve values
+	llmSettings := settingsStore.GetLLMSettings()
+	// Update the provider to match the selected one
+	llmSettings.Provider = provider
+
+	// Render the appropriate provider fields
+	var component templ.Component
+	if provider == "Google Vertex AI" || provider == "Google PaLM API" {
+		component = settings.GoogleProviderFields(&llmSettings)
+	} else {
+		component = settings.GenericProviderFields(&llmSettings)
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := component.Render(r.Context(), w); err != nil {
+		log.Printf("Error rendering provider fields: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
 }

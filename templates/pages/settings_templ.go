@@ -203,7 +203,7 @@ func APISettingsTab(llmSettings *settings.LLMSettings) templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\">LLM API Settings</h2><div id=\"llm-settings-response\" class=\"mb-4\"></div><form hx-put=\"/settings/llm\" hx-target=\"#llm-settings-response\" hx-swap=\"innerHTML\" class=\"space-y-4\"><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">LLM Provider</span></label> <select name=\"provider\" class=\"select select-bordered w-full\"><option value=\"Google Vertex AI\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\">LLM API Settings</h2><div id=\"llm-settings-response\" class=\"mb-4\"></div><form hx-put=\"/settings/llm\" hx-target=\"#llm-settings-response\" hx-swap=\"innerHTML\" class=\"space-y-4\"><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">LLM Provider</span></label> <select name=\"provider\" class=\"select select-bordered w-full\" hx-get=\"/settings/provider-fields\" hx-target=\"#provider-specific-fields\" hx-trigger=\"change\" hx-swap=\"innerHTML\"><option value=\"Google Vertex AI\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -243,33 +243,48 @@ func APISettingsTab(llmSettings *settings.LLMSettings) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, ">Anthropic</option></select></div><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">API Key</span></label> <input type=\"password\" name=\"api_key\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, ">Anthropic</option></select></div><!-- Provider-specific fields will be loaded here --><div id=\"provider-specific-fields\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if llmSettings.Provider == "Google Vertex AI" || llmSettings.Provider == "Google PaLM API" {
+			templ_7745c5c3_Err = settings.GoogleProviderFields(llmSettings).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = settings.GenericProviderFields(llmSettings).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">API Key</span></label> <input type=\"password\" name=\"api_key\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(llmSettings.APIKey)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/settings.templ`, Line: 144, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/settings.templ`, Line: 160, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\" placeholder=\"Enter your API key\" class=\"input input-bordered w-full\"></div><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Model</span></label> <input type=\"text\" name=\"model\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\" placeholder=\"Enter your API key\" class=\"input input-bordered w-full\"></div><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Model</span></label> <input type=\"text\" name=\"model\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(llmSettings.Model)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/settings.templ`, Line: 157, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/settings.templ`, Line: 173, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\" placeholder=\"gemini-pro\" class=\"input input-bordered w-full\"></div><div class=\"card-actions justify-end\"><button type=\"submit\" class=\"btn btn-primary\">Save LLM Settings</button></div></form></div></div><div class=\"card bg-base-100 shadow-xl mt-6\"><div class=\"card-body\"><h2 class=\"card-title\">Test Connection</h2><form hx-post=\"/settings/test-connection\" hx-target=\"#connection-result\" class=\"space-y-4\"><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Test Prompt</span></label> <textarea name=\"test_prompt\" placeholder=\"Enter a test prompt\" class=\"textarea textarea-bordered h-24\">Hello! This is a test prompt to verify the LLM API connection.</textarea></div><div class=\"card-actions justify-end\"><button type=\"submit\" class=\"btn btn-primary\">Test Connection</button></div></form><div id=\"connection-result\" class=\"mt-4\"></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\" placeholder=\"gemini-pro\" class=\"input input-bordered w-full\"></div><div class=\"card-actions justify-end\"><button type=\"submit\" class=\"btn btn-primary\">Save LLM Settings</button></div></form></div></div><div class=\"card bg-base-100 shadow-xl mt-6\"><div class=\"card-body\"><h2 class=\"card-title\">Test Connection</h2><form hx-post=\"/settings/test-connection\" hx-target=\"#connection-result\" class=\"space-y-4\"><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Test Prompt</span></label> <textarea name=\"test_prompt\" placeholder=\"Enter a test prompt\" class=\"textarea textarea-bordered h-24\">Hello! This is a test prompt to verify the LLM API connection.</textarea></div><div class=\"card-actions justify-end\"><button type=\"submit\" class=\"btn btn-primary\">Test Connection</button></div></form><div id=\"connection-result\" class=\"mt-4\"></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -298,7 +313,7 @@ func BackupSettingsTab() templ.Component {
 			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\">Backup & Restore (not implemented yet)</h2><div class=\"alert alert-info mb-4\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"stroke-current shrink-0 h-6 w-6\" fill=\"none\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z\"></path></svg> <span>Backup your configuration settings for safekeeping or restore from a previous backup.</span></div><div class=\"grid grid-cols-1 md:grid-cols-2 gap-6\"><div><h3 class=\"text-lg font-medium mb-4\">Create Backup</h3><button class=\"btn btn-primary w-full\">Download Backup</button></div><div><h3 class=\"text-lg font-medium mb-4\">Restore from Backup</h3><input type=\"file\" class=\"file-input file-input-bordered w-full\"> <button class=\"btn btn-accent w-full mt-2\">Upload & Restore</button></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\">Backup & Restore (not implemented yet)</h2><div class=\"alert alert-info mb-4\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"stroke-current shrink-0 h-6 w-6\" fill=\"none\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z\"></path></svg> <span>Backup your configuration settings for safekeeping or restore from a previous backup.</span></div><div class=\"grid grid-cols-1 md:grid-cols-2 gap-6\"><div><h3 class=\"text-lg font-medium mb-4\">Create Backup</h3><button class=\"btn btn-primary w-full\">Download Backup</button></div><div><h3 class=\"text-lg font-medium mb-4\">Restore from Backup</h3><input type=\"file\" class=\"file-input file-input-bordered w-full\"> <button class=\"btn btn-accent w-full mt-2\">Upload & Restore</button></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -1,10 +1,59 @@
 package settings
 
-// Simple provider fields component
+// Provider-specific fields for Google services
 templ GoogleProviderFields(settings *LLMSettings) {
-    <div>Google Provider Fields</div>
+    <div class="space-y-4">
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Project ID</span>
+            </label>
+            <input 
+                type="text" 
+                name="project_id" 
+                value={settings.ProjectID}
+                placeholder="your-project-id" 
+                class="input input-bordered w-full" 
+            />
+        </div>
+        
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Location</span>
+            </label>
+            <select name="location" class="select select-bordered w-full">
+                for _, location := range Locations() {
+                    <option value={location} if settings.Location == location { selected }>{location}</option>
+                }
+            </select>
+        </div>
+        
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Endpoint</span>
+            </label>
+            <input 
+                type="text" 
+                name="endpoint" 
+                value={settings.Endpoint}
+                placeholder="https://your-endpoint.googleapis.com" 
+                class="input input-bordered w-full" 
+            />
+        </div>
+        
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Service Account Key</span>
+            </label>
+            <textarea 
+                name="service_account_key" 
+                placeholder="Paste your service account JSON key here"
+                class="textarea textarea-bordered h-24"
+            >{settings.ServiceAccountKey}</textarea>
+        </div>
+    </div>
 }
 
+// Generic fields component (empty since API Key and Model are in main form)
 templ GenericProviderFields(settings *LLMSettings) {
-    <div>Generic Provider Fields</div>
+    <div></div>
 }

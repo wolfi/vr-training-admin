@@ -126,7 +126,14 @@ templ APISettingsTab(llmSettings *settings.LLMSettings) {
                     <label class="label">
                         <span class="label-text">LLM Provider</span>
                     </label>
-                    <select name="provider" class="select select-bordered w-full">
+                    <select 
+                        name="provider" 
+                        class="select select-bordered w-full"
+                        hx-get="/settings/provider-fields"
+                        hx-target="#provider-specific-fields"
+                        hx-trigger="change"
+                        hx-swap="innerHTML"
+                    >
                         <option value="Google Vertex AI" if llmSettings.Provider == "Google Vertex AI" { selected }>Google Vertex AI</option>
                         <option value="Google PaLM API" if llmSettings.Provider == "Google PaLM API" { selected }>Google PaLM API</option>
                         <option value="OpenAI" if llmSettings.Provider == "OpenAI" { selected }>OpenAI</option>
@@ -134,6 +141,15 @@ templ APISettingsTab(llmSettings *settings.LLMSettings) {
                     </select>
                 </div>
                 
+                <!-- Provider-specific fields will be loaded here -->
+                <div id="provider-specific-fields">
+                    if llmSettings.Provider == "Google Vertex AI" || llmSettings.Provider == "Google PaLM API" {
+                        @settings.GoogleProviderFields(llmSettings)
+                    } else {
+                        @settings.GenericProviderFields(llmSettings)
+                    }
+                </div>
+
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">API Key</span>
