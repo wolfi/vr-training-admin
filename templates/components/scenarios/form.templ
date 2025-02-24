@@ -1,0 +1,177 @@
+// templates/components/scenarios/form.templ
+package scenarios
+
+import "fmt"
+
+templ ScenarioForm(scenario *Scenario, isEdit bool) {
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">
+                if isEdit {
+                    Edit Scenario: {scenario.Name}
+                } else {
+                    Create New Scenario
+                }
+            </h2>
+            
+            <form
+                if isEdit {
+                    hx-put={"/scenarios/" + scenario.ID}
+                } else {
+                    hx-post="/scenarios"
+                }
+                hx-target="#main-content"
+                hx-swap="outerHTML"
+                class="space-y-6"
+            >
+                <!-- Basic Information Section -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Basic Information</h3>
+                    
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Scenario Name</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="name" 
+                            value={scenario.Name}
+                            placeholder="Enter scenario name" 
+                            class="input input-bordered w-full" 
+                            required
+                        />
+                    </div>
+                    
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Description</span>
+                        </label>
+                        <textarea 
+                            name="description" 
+                            placeholder="Describe the scenario" 
+                            class="textarea textarea-bordered h-24"
+                            required
+                        >{scenario.Description}</textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Category</span>
+                            </label>
+                            <select name="category" class="select select-bordered w-full">
+                                <option value="" disabled if scenario.Category == "" { selected }>Select category</option>
+                                <option value="Sales" if scenario.Category == "Sales" { selected }>Sales</option>
+                                <option value="Customer Service" if scenario.Category == "Customer Service" { selected }>Customer Service</option>
+                                <option value="Leadership" if scenario.Category == "Leadership" { selected }>Leadership</option>
+                                <option value="Conflict Resolution" if scenario.Category == "Conflict Resolution" { selected }>Conflict Resolution</option>
+                                <option value="Negotiation" if scenario.Category == "Negotiation" { selected }>Negotiation</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Difficulty Level</span>
+                            </label>
+                            <select name="difficulty" class="select select-bordered w-full">
+                                <option value="1" if scenario.Difficulty == 1 { selected }>Beginner</option>
+                                <option value="2" if scenario.Difficulty == 2 { selected }>Easy</option>
+                                <option value="3" if scenario.Difficulty == 3 { selected }>Intermediate</option>
+                                <option value="4" if scenario.Difficulty == 4 { selected }>Advanced</option>
+                                <option value="5" if scenario.Difficulty == 5 { selected }>Expert</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Duration (minutes)</span>
+                            </label>
+                            <input 
+                                type="number" 
+                                name="duration" 
+                                value={fmt.Sprint(scenario.Duration)}
+                                min="5" 
+                                max="120" 
+                                step="5" 
+                                class="input input-bordered w-full" 
+                            />
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Environment Settings -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Environment Settings</h3>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">VR Scene</span>
+                        </label>
+                        <select name="scene" class="select select-bordered w-full">
+                            <option value="office" if scenario.Scene == "office" { selected }>Office</option>
+                            <option value="meeting_room" if scenario.Scene == "meeting_room" { selected }>Meeting Room</option>
+                            <option value="retail_store" if scenario.Scene == "retail_store" { selected }>Retail Store</option>
+                            <option value="cafe" if scenario.Scene == "cafe" { selected }>Café</option>
+                            <option value="outdoor" if scenario.Scene == "outdoor" { selected }>Outdoor</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text">Enable Background Noise</span>
+                            <input 
+                                type="checkbox" 
+                                name="background_noise" 
+                                class="toggle toggle-primary"
+                                if scenario.BackgroundNoise {
+                                    checked
+                                }
+                            />
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Success Criteria -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Success Criteria</h3>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Success Definition</span>
+                        </label>
+                        <textarea 
+                            name="success_criteria" 
+                            placeholder="Define what constitutes success in this scenario" 
+                            class="textarea textarea-bordered h-24"
+                        >{scenario.SuccessCriteria}</textarea>
+                    </div>
+                    
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Required Keywords</span>
+                            <span class="label-text-alt">Comma separated</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="keywords" 
+                            value={scenario.Keywords}
+                            placeholder="Enter keywords that should be used" 
+                            class="input input-bordered w-full" 
+                        />
+                    </div>
+                </div>
+                
+                <div class="card-actions justify-end">
+                    <a href="/scenarios" class="btn btn-ghost">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        if isEdit {
+                            Save Changes
+                        } else {
+                            Create Scenario
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
