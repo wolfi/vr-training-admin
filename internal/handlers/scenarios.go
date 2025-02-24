@@ -108,7 +108,20 @@ func ScenarioCreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Redirect to scenarios page
+	// If this is an HTMX request, return the updated content
+	if r.Header.Get("HX-Request") == "true" {
+		allScenarios := scenarioStore.GetAll()
+		component := pages.ScenariosContent(allScenarios)
+
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if err := component.Render(r.Context(), w); err != nil {
+			log.Printf("Error rendering scenarios content: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Standard redirect for non-HTMX requests
 	http.Redirect(w, r, "/scenarios", http.StatusSeeOther)
 }
 
@@ -145,7 +158,20 @@ func ScenarioUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Redirect to scenarios page
+	// If this is an HTMX request, return the updated content
+	if r.Header.Get("HX-Request") == "true" {
+		allScenarios := scenarioStore.GetAll()
+		component := pages.ScenariosContent(allScenarios)
+
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if err := component.Render(r.Context(), w); err != nil {
+			log.Printf("Error rendering scenarios content: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Standard redirect for non-HTMX requests
 	http.Redirect(w, r, "/scenarios", http.StatusSeeOther)
 }
 

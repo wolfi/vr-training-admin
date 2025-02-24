@@ -21,7 +21,8 @@ templ AvatarForm(avatar *Avatar, isEdit bool) {
                     hx-post="/avatars"
                 }
                 hx-target="#main-content"
-                hx-swap="outerHTML"
+                hx-swap="innerHTML"
+                hx-push-url="/avatars"
                 class="space-y-6"
             >
                 <!-- Basic Information Section -->

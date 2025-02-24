@@ -108,7 +108,20 @@ func AvatarCreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Redirect to avatars page
+	// If this is an HTMX request, return the main content
+	if r.Header.Get("HX-Request") == "true" {
+		allAvatars := avatarStore.GetAll()
+		component := pages.AvatarsMainContent(allAvatars)
+
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if err := component.Render(r.Context(), w); err != nil {
+			log.Printf("Error rendering avatars content: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Standard redirect for non-HTMX requests
 	http.Redirect(w, r, "/avatars", http.StatusSeeOther)
 }
 
@@ -145,7 +158,20 @@ func AvatarUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Redirect to avatars page
+	// If this is an HTMX request, return the main content
+	if r.Header.Get("HX-Request") == "true" {
+		allAvatars := avatarStore.GetAll()
+		component := pages.AvatarsMainContent(allAvatars)
+
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if err := component.Render(r.Context(), w); err != nil {
+			log.Printf("Error rendering avatars content: %v", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Standard redirect for non-HTMX requests
 	http.Redirect(w, r, "/avatars", http.StatusSeeOther)
 }
 
