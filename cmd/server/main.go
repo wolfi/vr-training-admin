@@ -11,29 +11,36 @@ import (
 var registeredRoutes []string
 
 func setupRoutes() *http.ServeMux {
+	log.Println("Setting up all application routes...")
+
 	mux := http.NewServeMux()
 
 	// Register dashboard handler
+	log.Println("Registering dashboard route")
 	mux.HandleFunc("/", handlers.DashboardHandler)
-	registeredRoutes = append(registeredRoutes, "/ -> DashboardHandler")
 
 	// Register scenario routes
+	log.Println("Setting up scenario routes")
 	handlers.SetupScenarioRoutes(mux)
-	registeredRoutes = append(registeredRoutes, "/scenarios -> SetupScenarioRoutes")
 
 	// Register avatar routes
+	log.Println("Setting up avatar routes")
 	handlers.SetupAvatarRoutes(mux)
-	registeredRoutes = append(registeredRoutes, "/avatar-lab -> SetupAvatarRoutes")
 
 	// Register observer routes
+	log.Println("Setting up observer routes")
 	handlers.SetupObserverRoutes(mux)
-	registeredRoutes = append(registeredRoutes, "/observers -> SetupObserverRoutes")
+
+	// Register settings routes
+	log.Println("Setting up settings routes")
+	handlers.SetupSettingsRoutes(mux)
 
 	// Serve static files
+	log.Println("Setting up static file server")
 	fs := http.FileServer(http.Dir("static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
-	registeredRoutes = append(registeredRoutes, "/static/ -> Static Files")
 
+	log.Println("All routes registered successfully")
 	return mux
 }
 
