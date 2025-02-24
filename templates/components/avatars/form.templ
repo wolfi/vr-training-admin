@@ -1,0 +1,240 @@
+// templates/components/avatars/form.templ
+package avatars
+
+import "fmt"
+
+templ AvatarForm(avatar *Avatar, isEdit bool) {
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">
+                if isEdit {
+                    Edit Avatar: {avatar.Name}
+                } else {
+                    Create New Avatar
+                }
+            </h2>
+            
+            <form
+                if isEdit {
+                    hx-put={"/avatars/" + avatar.ID}
+                } else {
+                    hx-post="/avatars"
+                }
+                hx-target="#main-content"
+                hx-swap="outerHTML"
+                class="space-y-6"
+            >
+                <!-- Basic Information Section -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Basic Information</h3>
+                    
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Avatar Name</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="name" 
+                            value={avatar.Name}
+                            placeholder="Enter avatar name" 
+                            class="input input-bordered w-full" 
+                            required
+                        />
+                    </div>
+                    
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Description</span>
+                        </label>
+                        <textarea 
+                            name="description" 
+                            placeholder="Describe the avatar's role and purpose" 
+                            class="textarea textarea-bordered h-24"
+                            required
+                        >{avatar.Description}</textarea>
+                    </div>
+                    
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Avatar Image URL (optional)</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="image_url" 
+                            value={avatar.ImageURL}
+                            placeholder="https://example.com/avatar.jpg" 
+                            class="input input-bordered w-full" 
+                        />
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Personality Type</span>
+                            </label>
+                            <select name="personality_type" class="select select-bordered w-full">
+                                <option value="" disabled if avatar.PersonalityType == "" { selected }>Select personality</option>
+                                for _, personality := range PersonalityTypes() {
+                                    <option value={personality} if avatar.PersonalityType == personality { selected }>{personality}</option>
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Communication Style</span>
+                            </label>
+                            <select name="communication_style" class="select select-bordered w-full">
+                                <option value="" disabled if avatar.CommunicationStyle == "" { selected }>Select style</option>
+                                for _, style := range CommunicationStyles() {
+                                    <option value={style} if avatar.CommunicationStyle == style { selected }>{style}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Behavior Settings -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Behavior Settings</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Knowledge Level (1-10)</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <input 
+                                    type="range" 
+                                    name="knowledge_level" 
+                                    min="1" 
+                                    max="10"
+                                    value={fmt.Sprint(avatar.KnowledgeLevel)}
+                                    class="range range-primary" 
+                                />
+                                <span id="knowledge-value" class="badge badge-primary">{fmt.Sprint(avatar.KnowledgeLevel)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Aggressiveness Level (1-10)</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <input 
+                                    type="range" 
+                                    name="aggressiveness_level" 
+                                    min="1" 
+                                    max="10"
+                                    value={fmt.Sprint(avatar.AggressivenessLevel)}
+                                    class="range range-error" 
+                                />
+                                <span id="aggressiveness-value" class="badge badge-error">{fmt.Sprint(avatar.AggressivenessLevel)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Patience Level (1-10)</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <input 
+                                    type="range" 
+                                    name="patience_level" 
+                                    min="1" 
+                                    max="10"
+                                    value={fmt.Sprint(avatar.PatienceLevel)}
+                                    class="range range-success" 
+                                />
+                                <span id="patience-value" class="badge badge-success">{fmt.Sprint(avatar.PatienceLevel)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Emotional Reactivity (1-10)</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <input 
+                                    type="range" 
+                                    name="emotional_reactivity" 
+                                    min="1" 
+                                    max="10"
+                                    value={fmt.Sprint(avatar.EmotionalReactivity)}
+                                    class="range range-warning" 
+                                />
+                                <span id="emotional-value" class="badge badge-warning">{fmt.Sprint(avatar.EmotionalReactivity)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Voice Settings -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Voice Settings</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Voice Type</span>
+                            </label>
+                            <select name="voice_type" class="select select-bordered w-full">
+                                <option value="" disabled if avatar.VoiceType == "" { selected }>Select voice</option>
+                                for _, voice := range VoiceTypes() {
+                                    <option value={voice} if avatar.VoiceType == voice { selected }>{voice}</option>
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Speaking Speed (1-5)</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <input 
+                                    type="range" 
+                                    name="speaking_speed" 
+                                    min="1" 
+                                    max="5"
+                                    value={fmt.Sprint(avatar.SpeakingSpeed)}
+                                    class="range range-accent" 
+                                />
+                                <span class="badge badge-accent">{fmt.Sprint(avatar.SpeakingSpeed)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Keywords Section -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Training Keywords</h3>
+                    
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Vocabulary Keywords</span>
+                            <span class="label-text-alt">Comma separated</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="keywords" 
+                            value={avatar.Keywords}
+                            placeholder="Enter vocabulary keywords for this avatar" 
+                            class="input input-bordered w-full" 
+                        />
+                    </div>
+                </div>
+                
+                <div class="card-actions justify-end">
+                    <a href="/avatars" class="btn btn-ghost">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        if isEdit {
+                            Save Changes
+                        } else {
+                            Create Avatar
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
