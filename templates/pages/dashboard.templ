@@ -11,7 +11,7 @@ templ Dashboard() {
                 <div class="card bg-base-100 shadow-xl">
                     <div class="card-body">
                         <h2 class="card-title">
-                            <span class="text-primary">Scenarios</span>
+                            <span class="text-primary">Training Scenarios</span>
                         </h2>
                         <div class="stats shadow">
                             <div class="stat">
@@ -30,7 +30,7 @@ templ Dashboard() {
                 <div class="card bg-base-100 shadow-xl">
                     <div class="card-body">
                         <h2 class="card-title">
-                            <span class="text-secondary">Avatars</span>
+                            <span class="text-secondary">Training Avatars</span>
                         </h2>
                         <div class="stats shadow">
                             <div class="stat">
@@ -49,19 +49,50 @@ templ Dashboard() {
                 <div class="card bg-base-100 shadow-xl">
                     <div class="card-body">
                         <h2 class="card-title">
-                            <span class="text-accent">Observer</span>
+                            <span class="text-accent">Training Observer</span>
                         </h2>
                         <div class="stats shadow">
                             <div class="stat">
                                 <div class="stat-title">Status</div>
-                                <div class="stat-value text-success">Active</div>
-                                <div class="stat-desc">Monitoring training sessions</div>
+                                <div class="stat-value text-success">2 Active</div>
+                                <div class="stat-desc">Monitoring sessions</div>
                             </div>
                         </div>
                         <div class="card-actions justify-end">
-                            <a href="/observer" class="btn btn-accent btn-sm">Observer Settings</a>
+                            <a href="/observers" class="btn btn-accent btn-sm">Observer Settings</a>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="mt-8">
+                <h2 class="text-2xl font-bold mb-4">Recent Activity</h2>
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Activity</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-02-24</td>
+                                <td>Sales Training #1</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                                <td><button class="btn btn-ghost btn-xs">View</button></td>
+                            </tr>
+                            <tr>
+                                <td>2024-02-24</td>
+                                <td>Customer Service Scenario</td>
+                                <td><span class="badge badge-warning">In Progress</span></td>
+                                <td><button class="btn btn-ghost btn-xs">View</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

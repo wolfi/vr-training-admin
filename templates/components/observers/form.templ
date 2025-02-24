@@ -1,169 +1,248 @@
 // templates/components/observers/form.templ
-//go:generate templ
-
 package observers
 
 import (
-    "github.com/a-h/templ"
-    templruntime "github.com/a-h/templ/runtime"
-
     "fmt"
-    "github.com/saladinomario/vr-training-admin/internal/models"
+    "strings"
 )
 
-// ObserverForm renders a form to create or edit an observer.
-func ObserverForm(obs models.Observer, isEdit bool) templ.Component {
-    return templruntime.GeneratedTemplate(func(in templruntime.GeneratedComponentInput) (err error) {
-        w, ctx := in.Writer, in.Context
-        if ctx.Err() != nil {
-            return ctx.Err()
+templ ObserverForm(observer *Observer, isEdit bool) {
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">
+                if isEdit {
+                    Edit Observer: {observer.Name}
+                } else {
+                    Create New Observer
+                }
+            </h2>
+            
+            <form
+                if isEdit {
+                    hx-put={"/observers/" + observer.ID}
+                } else {
+                    hx-post="/observers"
+                }
+                hx-target="#main-content"
+                hx-swap="outerHTML"
+                class="space-y-6"
+            >
+                <!-- Basic Information Section -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Basic Information</h3>
+                    
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Observer Name</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="name" 
+                            value={observer.Name}
+                            placeholder="Enter observer name" 
+                            class="input input-bordered w-full" 
+                            required
+                        />
+                    </div>
+                    
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Description</span>
+                        </label>
+                        <textarea 
+                            name="description" 
+                            placeholder="Describe the observer's role and purpose" 
+                            class="textarea textarea-bordered h-24"
+                            required
+                        >{observer.Description}</textarea>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label cursor-pointer justify-start gap-4">
+                            <input
+                                type="checkbox"
+                                name="active"
+                                class="toggle toggle-success"
+                                if observer.Active {
+                                    checked
+                                }
+                            />
+                            <span class="label-text">Observer Active</span>
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt">Enable this observer for training sessions</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Feedback Settings -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Feedback Settings</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Feedback Style</span>
+                            </label>
+                            <select name="feedback_style" class="select select-bordered w-full">
+                                <option value="" disabled if observer.FeedbackStyle == "" { selected }>Select style</option>
+                                for _, style := range FeedbackStyles() {
+                                    <option value={style} if observer.FeedbackStyle == style { selected }>{style}</option>
+                                }
+                            </select>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Feedback Tone</span>
+                            </label>
+                            <select name="feedback_tone" class="select select-bordered w-full">
+                                <option value="" disabled if observer.FeedbackTone == "" { selected }>Select tone</option>
+                                for _, tone := range FeedbackTones() {
+                                    <option value={tone} if observer.FeedbackTone == tone { selected }>{tone}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Intervention Level (1-5)</span>
+                                <span class="label-text-alt">How often to interrupt</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <input 
+                                    type="range" 
+                                    name="intervention_level" 
+                                    min="1" 
+                                    max="5"
+                                    value={fmt.Sprint(observer.InterventionLevel)}
+                                    class="range range-primary" 
+                                />
+                                <div class="flex justify-between w-full px-2">
+                                    <span class="text-xs">Minimal</span>
+                                    <span class="badge badge-primary">{fmt.Sprint(observer.InterventionLevel)}</span>
+                                    <span class="text-xs">Frequent</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Detail Level (1-5)</span>
+                                <span class="label-text-alt">Depth of feedback</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <input 
+                                    type="range" 
+                                    name="detail_level" 
+                                    min="1" 
+                                    max="5"
+                                    value={fmt.Sprint(observer.DetailLevel)}
+                                    class="range range-secondary" 
+                                />
+                                <div class="flex justify-between w-full px-2">
+                                    <span class="text-xs">Brief</span>
+                                    <span class="badge badge-secondary">{fmt.Sprint(observer.DetailLevel)}</span>
+                                    <span class="text-xs">Detailed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Success Metrics -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Success Metrics</h3>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Success Definition</span>
+                        </label>
+                        <textarea 
+                            name="success_metrics" 
+                            placeholder="Define what constitutes success in observed training sessions" 
+                            class="textarea textarea-bordered h-24"
+                        >{observer.SuccessMetrics}</textarea>
+                    </div>
+                </div>
+                
+                <!-- Intervention Triggers -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium">Intervention Triggers</h3>
+                    <p class="text-sm text-gray-600">Select events that should trigger observer intervention</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        for _, trigger := range CommonTriggers() {
+                            <div class="form-control">
+                                <label class="label cursor-pointer justify-start gap-2">
+                                    <input 
+                                        type="checkbox" 
+                                        name="triggers" 
+                                        value={trigger}
+                                        class="checkbox checkbox-primary"
+                                        if containsTrigger(observer.InterventionTriggers, trigger) {
+                                            checked
+                                        }
+                                    />
+                                    <span class="label-text">{trigger}</span>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Custom Triggers</span>
+                            <span class="label-text-alt">One per line</span>
+                        </label>
+                        <textarea 
+                            name="custom_triggers" 
+                            placeholder="Enter any custom intervention triggers" 
+                            class="textarea textarea-bordered h-20"
+                        >{getCustomTriggers(observer.InterventionTriggers)}</textarea>
+                    </div>
+                </div>
+                
+                <div class="card-actions justify-end">
+                    <a href="/observers" class="btn btn-ghost">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        if isEdit {
+                            Save Changes
+                        } else {
+                            Create Observer
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+// Helper function to check if a trigger is in the list
+func containsTrigger(triggers []string, trigger string) bool {
+    for _, t := range triggers {
+        if t == trigger {
+            return true
         }
+    }
+    return false
+}
 
-        title := "Create New Observer"
-        formAction := ` hx-post="/observers"`
-
-        if isEdit {
-            title = fmt.Sprintf("Edit Observer: %s", obs.Name)
-            formAction = fmt.Sprintf(` hx-put="/observers/%s"`, obs.ID)
+// Helper function to get custom triggers (triggers not in CommonTriggers)
+func getCustomTriggers(triggers []string) string {
+    commonTriggers := make(map[string]bool)
+    for _, t := range CommonTriggers() {
+        commonTriggers[t] = true
+    }
+    
+    var customTriggers []string
+    for _, t := range triggers {
+        if !commonTriggers[t] {
+            customTriggers = append(customTriggers, t)
         }
-
-        _, _ = w.Write([]byte(`
-<div class="card bg-base-100 shadow-xl">
-  <div class="card-body">
-    <h2 class="card-title">` + title + `</h2>
-    <form ` + formAction + ` 
-          hx-target="#main-content" 
-          hx-swap="outerHTML" 
-          class="space-y-6">
-      
-      <!-- Basic Info -->
-      <div class="form-control w-full">
-        <label class="label">
-          <span class="label-text">Observer Name</span>
-        </label>
-        <input type="text" name="name" value="` + templ.EscapeString(obs.Name) + `" 
-               placeholder="Give this observer a descriptive name" 
-               class="input input-bordered w-full" required>
-      </div>
-
-      <!-- Feedback Style -->
-      <div class="form-control w-full">
-        <label class="label">
-          <span class="label-text">Feedback Style</span>
-        </label>
-        <input type="text" name="feedback_style" value="` + templ.EscapeString(obs.FeedbackStyle) + `" 
-               placeholder="e.g. Encouraging, Direct, Socratic..." 
-               class="input input-bordered w-full">
-      </div>
-
-      <!-- Interruption Triggers -->
-      <div class="form-control w-full">
-        <label class="label">
-          <span class="label-text">Interruption Triggers</span>
-        </label>
-        <input type="text" name="interruption_triggers" value="` + templ.EscapeString(obs.InterruptionTriggers) + `" 
-               placeholder="Comma-separated triggers..." 
-               class="input input-bordered w-full">
-      </div>
-
-      <!-- Intervention Frequency -->
-      <div class="form-control w-full">
-        <label class="label">
-          <span class="label-text">Intervention Frequency (1-10)</span>
-        </label>
-        <input type="number" name="intervention_frequency" 
-               value="` + fmt.Sprintf("%d", obs.InterventionFrequency) + `"
-               min="1" max="10" step="1" 
-               class="input input-bordered w-full">
-      </div>
-
-      <!-- KPI, Scoring, Achievements -->
-      <div class="space-y-2">
-        <label class="label">
-          <span class="label-text">Key Performance Indicators</span>
-        </label>
-        <textarea name="kpis" class="textarea textarea-bordered" 
-                  placeholder="List relevant KPIs...">` + templ.EscapeString(obs.KeyPerformanceIndicators) + `</textarea>
-      </div>
-
-      <div class="space-y-2">
-        <label class="label">
-          <span class="label-text">Scoring System</span>
-        </label>
-        <input type="text" name="scoring_system" value="` + templ.EscapeString(obs.ScoringSystem) + `"
-               placeholder="Points-based, star ratings, etc." 
-               class="input input-bordered w-full">
-      </div>
-
-      <div class="space-y-2">
-        <label class="label">
-          <span class="label-text">Required Achievements</span>
-        </label>
-        <textarea name="required_achievements" class="textarea textarea-bordered" 
-                  placeholder="Define the achievements to succeed...">` + templ.EscapeString(obs.RequiredAchievements) + `</textarea>
-      </div>
-
-      <div class="space-y-2">
-        <label class="label">
-          <span class="label-text">Failed State Definitions</span>
-        </label>
-        <textarea name="failed_states" class="textarea textarea-bordered" 
-                  placeholder="What triggers a 'failure' in training?">` + templ.EscapeString(obs.FailedStateDefinitions) + `</textarea>
-      </div>
-
-      <!-- Feedback & Report -->
-      <div class="space-y-2">
-        <label class="label">
-          <span class="label-text">Real-Time Feedback Rules</span>
-        </label>
-        <textarea name="realtime_rules" class="textarea textarea-bordered" 
-                  placeholder="When does the observer interrupt or comment?">` + templ.EscapeString(obs.RealTimeFeedbackRules) + `</textarea>
-      </div>
-
-      <div class="space-y-2">
-        <label class="label">
-          <span class="label-text">Post-Session Report Template</span>
-        </label>
-        <textarea name="report_template" class="textarea textarea-bordered" 
-                  placeholder="Template for the final report.">` + templ.EscapeString(obs.PostSessionReportTemplate) + `</textarea>
-      </div>
-
-      <div class="space-y-2">
-        <label class="label">
-          <span class="label-text">Learning Points Focus</span>
-        </label>
-        <input type="text" name="learning_focus" value="` + templ.EscapeString(obs.LearningPointsFocus) + `"
-               placeholder="e.g. Empathy, clarifying questions, etc." 
-               class="input input-bordered w-full">
-      </div>
-
-      <div class="space-y-2">
-        <label class="label">
-          <span class="label-text">Improvement Suggestions Style</span>
-        </label>
-        <input type="text" name="improvement_style" value="` + templ.EscapeString(obs.ImprovementSuggestionsStyle) + `"
-               placeholder="Bullet points, step-by-step, or direct advice..." 
-               class="input input-bordered w-full">
-      </div>
-
-      <!-- Actions -->
-      <div class="card-actions justify-end">
-        <a href="/observers" class="btn btn-ghost">Cancel</a>
-        <button type="submit" class="btn btn-primary">
-`))
-        if isEdit {
-            _, _ = w.Write([]byte(`Save Changes`))
-        } else {
-            _, _ = w.Write([]byte(`Create Observer`))
-        }
-        _, _ = w.Write([]byte(`
-        </button>
-      </div>
-
-    </form>
-  </div>
-</div>
-`))
-        return nil
-    })
+    }
+    
+    return strings.Join(customTriggers, "\n")
 }

@@ -1,3 +1,4 @@
+// internal/handlers/observers.go
 package handlers
 
 import (
@@ -39,7 +40,7 @@ func ObserversHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// ObserverNewHandler displays the form to create a new observer
+// ObserverNewHandler handles the new observer form
 func ObserverNewHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -62,20 +63,21 @@ func ObserverEditHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Extract ID from URL: e.g. /observers/edit/observer_20250101010101
+	// Extract ID from URL
 	idStr := strings.TrimPrefix(r.URL.Path, "/observers/edit/")
 	if idStr == r.URL.Path {
 		http.NotFound(w, r)
 		return
 	}
 
-	obs, err := observerStore.GetByID(idStr)
+	// Get observer by ID
+	observer, err := observerStore.GetByID(idStr)
 	if err != nil {
 		http.NotFound(w, r)
 		return
 	}
 
-	component := pages.ObserverEdit(obs)
+	component := pages.ObserverEdit(observer)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := component.Render(r.Context(), w); err != nil {
@@ -96,27 +98,28 @@ func ObserverCreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Parse form values
 	observer := parseObserverForm(r)
 
+	// Create observer
 	_, err := observerStore.Create(observer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	// Redirect to the observers page
+	// Redirect to observers page
 	http.Redirect(w, r, "/observers", http.StatusSeeOther)
 }
 
 // ObserverUpdateHandler handles observer updates
 func ObserverUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	// We allow PUT or POST for "update" to accommodate HTMX or plain forms
 	if r.Method != http.MethodPut && r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Extract ID from URL: e.g. /observers/observer_20250101010101
+	// Extract ID from URL
 	idStr := strings.TrimPrefix(r.URL.Path, "/observers/")
 	if idStr == r.URL.Path {
 		http.NotFound(w, r)
@@ -128,8 +131,10 @@ func ObserverUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Parse form values
 	observer := parseObserverForm(r)
 
+	// Update observer
 	err := observerStore.Update(idStr, observer)
 	if err != nil {
 		if err == models.ErrObserverNotFound {
@@ -140,7 +145,7 @@ func ObserverUpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Redirect to the observers page
+	// Redirect to observers page
 	http.Redirect(w, r, "/observers", http.StatusSeeOther)
 }
 
@@ -158,6 +163,7 @@ func ObserverDeleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Delete observer
 	err := observerStore.Delete(idStr)
 	if err != nil {
 		if err == models.ErrObserverNotFound {
@@ -185,7 +191,7 @@ func ObserverDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/observers", http.StatusSeeOther)
 }
 
-// ObserverSearchHandler handles searching for observers
+// ObserverSearchHandler handles observer search
 func ObserverSearchHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -204,30 +210,51 @@ func ObserverSearchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// parseObserverForm extracts Observer fields from a request form.
-func parseObserverForm(r *http.Request) models.Observer {
-	interventionFreq, _ := strconv.Atoi(r.FormValue("intervention_frequency"))
+// Helper function to parse observer form data
+func parseObserverForm(r *http.Request) observers.Observer {
+	interventionLevel, _ := strconv.Atoi(r.FormValue("intervention_level"))
+	detailLevel, _ := strconv.Atoi(r.FormValue("detail_level"))
+	active := r.FormValue("active") == "on"
 
-	return models.Observer{
-		Name:                        r.FormValue("name"),
-		InterruptionTriggers:        r.FormValue("interruption_triggers"),
-		FeedbackStyle:               r.FormValue("feedback_style"),
-		InterventionFrequency:       interventionFreq,
-		KeyPerformanceIndicators:    r.FormValue("kpis"),
-		ScoringSystem:               r.FormValue("scoring_system"),
-		RequiredAchievements:        r.FormValue("required_achievements"),
-		FailedStateDefinitions:      r.FormValue("failed_states"),
-		RealTimeFeedbackRules:       r.FormValue("realtime_rules"),
-		PostSessionReportTemplate:   r.FormValue("report_template"),
-		LearningPointsFocus:         r.FormValue("learning_focus"),
-		ImprovementSuggestionsStyle: r.FormValue("improvement_style"),
+	// Process triggers
+	triggerValues := r.Form["triggers"]
+	customTriggers := r.FormValue("custom_triggers")
+
+	var interventionTriggers []string
+	// Add selected common triggers
+	interventionTriggers = append(interventionTriggers, triggerValues...)
+
+	// Add custom triggers
+	if customTriggers != "" {
+		customLines := strings.Split(customTriggers, "\n")
+		for _, line := range customLines {
+			line = strings.TrimSpace(line)
+			if line != "" {
+				interventionTriggers = append(interventionTriggers, line)
+			}
+		}
+	}
+
+	return observers.Observer{
+		Name:                 r.FormValue("name"),
+		Description:          r.FormValue("description"),
+		FeedbackStyle:        r.FormValue("feedback_style"),
+		InterventionLevel:    interventionLevel,
+		DetailLevel:          detailLevel,
+		FeedbackTone:         r.FormValue("feedback_tone"),
+		SuccessMetrics:       r.FormValue("success_metrics"),
+		InterventionTriggers: interventionTriggers,
+		Active:               active,
 	}
 }
 
 // SetupObserverRoutes registers all observer-related routes
 func SetupObserverRoutes(mux *http.ServeMux) {
+	log.Println("Setting up observer routes...")
+
 	// List and Create
 	mux.HandleFunc("/observers", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Handling observer request: %s %s", r.Method, r.URL.Path)
 		switch r.Method {
 		case http.MethodGet:
 			ObserversHandler(w, r)
@@ -258,4 +285,6 @@ func SetupObserverRoutes(mux *http.ServeMux) {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	})
+
+	log.Println("Observer routes registered successfully")
 }

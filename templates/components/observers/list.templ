@@ -1,81 +1,83 @@
 // templates/components/observers/list.templ
-//go:generate templ
-
 package observers
 
-import (
-	"fmt"
+import "fmt"
 
-	"github.com/a-h/templ"
-	templruntime "github.com/a-h/templ/runtime"
-
-	"github.com/saladinomario/vr-training-admin/internal/models"
-)
-
-// ObserverList displays a table of observers.
-func ObserverList(obsList []models.Observer) templ.Component {
-	return templruntime.GeneratedTemplate(func(in templruntime.GeneratedComponentInput) (err error) {
-		w, ctx := in.Writer, in.Context
-		if ctx.Err() != nil {
-			return ctx.Err()
-		}
-
-		// Start rendering
-		_, _ = w.Write([]byte(`
-<div class="overflow-x-auto">
-  <table class="table w-full">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Feedback Style</th>
-        <th>Intervention Frequency</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-`))
-		if len(obsList) == 0 {
-			_, _ = w.Write([]byte(`
-      <tr><td colspan="4" class="text-center py-4">No observers found. Create your first one!</td></tr>
-`))
-		} else {
-			for _, obs := range obsList {
-				_, _ = w.Write([]byte(`
-      <tr>
-        <td>`))
-				_, _ = w.Write([]byte(templ.EscapeString(obs.Name)))
-				_, _ = w.Write([]byte(`</td>
-        <td>`))
-				_, _ = w.Write([]byte(templ.EscapeString(obs.FeedbackStyle)))
-				_, _ = w.Write([]byte(`</td>
-        <td>`))
-				_, _ = w.Write([]byte(templ.EscapeString(fmt.Sprintf("%d", obs.InterventionFrequency))))
-				_, _ = w.Write([]byte(`</td>
-        <td>
-          <div class="flex gap-2">
-            <a href="/observers/edit/`))
-				_, _ = w.Write([]byte(templ.EscapeString(obs.ID)))
-				_, _ = w.Write([]byte(`" class="btn btn-xs btn-primary">Edit</a>
-            <button 
-              hx-delete="/observers/`))
-				_, _ = w.Write([]byte(templ.EscapeString(obs.ID)))
-				_, _ = w.Write([]byte(`" 
-              hx-confirm="Are you sure you want to delete this observer?"
-              hx-target="#observer-list"
-              class="btn btn-xs btn-error">
-              Delete
-            </button>
-          </div>
-        </td>
-      </tr>
-`))
-			}
-		}
-		_, _ = w.Write([]byte(`
-    </tbody>
-  </table>
-</div>
-`))
-		return nil
-	})
+templ ObserverList(observers []Observer) {
+    <div class="space-y-6">
+        if len(observers) == 0 {
+            <div class="text-center py-12">
+                <div class="flex flex-col items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                    <h3 class="mt-4 text-lg font-medium">No observers found</h3>
+                    <p class="mt-1 text-gray-500">Create your first observer to get started</p>
+                </div>
+            </div>
+        } else {
+            for _, observer := range observers {
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h2 class="card-title">{observer.Name}</h2>
+                                <div class="flex mt-1 gap-2">
+                                    <div class="badge badge-outline">{observer.FeedbackStyle}</div>
+                                    <div class="badge badge-outline">{observer.FeedbackTone}</div>
+                                    if observer.Active {
+                                        <div class="badge badge-success">Active</div>
+                                    } else {
+                                        <div class="badge badge-ghost">Inactive</div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <a href={templ.SafeURL("/observers/edit/" + observer.ID)} class="btn btn-sm btn-primary">Edit</a>
+                                <button 
+                                    hx-delete={"/observers/" + observer.ID}
+                                    hx-confirm="Are you sure you want to delete this observer?"
+                                    hx-target="#observer-list"
+                                    class="btn btn-sm btn-outline btn-error">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <p class="text-sm mt-4">{observer.Description}</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <div class="text-sm font-medium mb-2">Intervention Level</div>
+                                <div class="flex items-center">
+                                    <progress class="progress progress-primary w-full" value={fmt.Sprint(observer.InterventionLevel)} max="5"></progress>
+                                    <span class="ml-2 text-xs">{fmt.Sprint(observer.InterventionLevel)}/5</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium mb-2">Detail Level</div>
+                                <div class="flex items-center">
+                                    <progress class="progress progress-secondary w-full" value={fmt.Sprint(observer.DetailLevel)} max="5"></progress>
+                                    <span class="ml-2 text-xs">{fmt.Sprint(observer.DetailLevel)}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        if len(observer.InterventionTriggers) > 0 {
+                            <div class="mt-4">
+                                <div class="text-sm font-medium mb-2">Intervention Triggers</div>
+                                <div class="flex flex-wrap gap-2">
+                                    for _, trigger := range observer.InterventionTriggers {
+                                        if len(trigger) > 0 {
+                                            <div class="badge badge-outline">{trigger}</div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
 }
