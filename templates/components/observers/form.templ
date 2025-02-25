@@ -24,7 +24,8 @@ templ ObserverForm(observer *Observer, isEdit bool) {
                     hx-post="/observers"
                 }
                 hx-target="#main-content"
-                hx-swap="outerHTML"
+                hx-swap="innerHTML"
+                hx-push-url="/observers"
                 class="space-y-6"
             >
                 <!-- Basic Information Section -->
