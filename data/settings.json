@@ -1,16 +1,16 @@
 {
   "llm": {
     "ID": "default",
-    "Provider": "Google Vertex AI",
+    "Provider": "OpenAI",
     "APIKey": "",
-    "Model": "gemini-pro",
+    "Model": "o4",
     "MaxTokens": 1024,
     "Temperature": 0.7,
     "TopP": 0.95,
     "FrequencyPenalty": 0,
     "PresencePenalty": 0,
     "ProjectID": "",
-    "Location": "us-central1",
+    "Location": "",
     "Endpoint": "",
     "ServiceAccountKey": ""
   },

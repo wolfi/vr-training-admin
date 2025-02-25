@@ -52,7 +52,7 @@ func AvatarForm(avatar *Avatar, isEdit bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Create New Avatar")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Create New Citizen Profile")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -85,7 +85,7 @@ func AvatarForm(avatar *Avatar, isEdit bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/avatars\" class=\"space-y-6\"><!-- Basic Information Section --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Basic Information</h3><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Avatar Name</span></label> <input type=\"text\" name=\"name\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/avatars\" class=\"space-y-6\"><!-- Basic Information Section --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Citizen Profile</h3><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Citizen Name</span></label> <input type=\"text\" name=\"name\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -98,7 +98,7 @@ func AvatarForm(avatar *Avatar, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" placeholder=\"Enter avatar name\" class=\"input input-bordered w-full\" required></div><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Description</span></label> <textarea name=\"description\" placeholder=\"Describe the avatar&#39;s role and purpose\" class=\"textarea textarea-bordered h-24\" required>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" placeholder=\"Enter citizen name\" class=\"input input-bordered w-full\" required></div><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Description</span></label> <textarea name=\"description\" placeholder=\"Describe the citizen&#39;s background and service needs\" class=\"textarea textarea-bordered h-24\" required>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -111,7 +111,7 @@ func AvatarForm(avatar *Avatar, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</textarea></div><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Avatar Image URL (optional)</span></label> <input type=\"text\" name=\"image_url\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</textarea></div><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Citizen Photo URL (optional)</span></label> <input type=\"text\" name=\"image_url\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -236,7 +236,7 @@ func AvatarForm(avatar *Avatar, isEdit bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</select></div></div></div><!-- Behavior Settings --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Behavior Settings</h3><div class=\"grid grid-cols-1 md:grid-cols-2 gap-6\"><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Knowledge Level (1-10)</span></label><div class=\"flex items-center gap-4\"><input type=\"range\" name=\"knowledge_level\" min=\"1\" max=\"10\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</select></div></div></div><!-- Interaction Characteristics --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Interaction Characteristics</h3><div class=\"grid grid-cols-1 md:grid-cols-2 gap-6\"><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Service Knowledge Level (1-10)</span></label><div class=\"flex items-center gap-4\"><input type=\"range\" name=\"knowledge_level\" min=\"1\" max=\"10\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -262,7 +262,7 @@ func AvatarForm(avatar *Avatar, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</span></div></div><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Aggressiveness Level (1-10)</span></label><div class=\"flex items-center gap-4\"><input type=\"range\" name=\"aggressiveness_level\" min=\"1\" max=\"10\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</span></div></div><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Frustration Level (1-10)</span></label><div class=\"flex items-center gap-4\"><input type=\"range\" name=\"aggressiveness_level\" min=\"1\" max=\"10\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -314,7 +314,7 @@ func AvatarForm(avatar *Avatar, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</span></div></div><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Emotional Reactivity (1-10)</span></label><div class=\"flex items-center gap-4\"><input type=\"range\" name=\"emotional_reactivity\" min=\"1\" max=\"10\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</span></div></div><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Emotional Intensity (1-10)</span></label><div class=\"flex items-center gap-4\"><input type=\"range\" name=\"emotional_reactivity\" min=\"1\" max=\"10\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -422,7 +422,7 @@ func AvatarForm(avatar *Avatar, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</span></div></div></div></div><!-- Keywords Section --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Training Keywords</h3><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Vocabulary Keywords</span> <span class=\"label-text-alt\">Comma separated</span></label> <input type=\"text\" name=\"keywords\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "</span></div></div></div></div><!-- Service Keywords --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Service Keywords</h3><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Service-Related Terms</span> <span class=\"label-text-alt\">Comma separated</span></label> <input type=\"text\" name=\"keywords\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -435,7 +435,7 @@ func AvatarForm(avatar *Avatar, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "\" placeholder=\"Enter vocabulary keywords for this avatar\" class=\"input input-bordered w-full\"></div></div><div class=\"card-actions justify-end\"><a href=\"/avatars\" class=\"btn btn-ghost\">Cancel</a> <button type=\"submit\" class=\"btn btn-primary\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "\" placeholder=\"Enter relevant service terms, procedures, or documents\" class=\"input input-bordered w-full\"></div></div><div class=\"card-actions justify-end\"><a href=\"/avatars\" class=\"btn btn-ghost\">Cancel</a> <button type=\"submit\" class=\"btn btn-primary\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

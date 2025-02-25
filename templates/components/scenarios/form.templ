@@ -10,7 +10,7 @@ templ ScenarioForm(scenario *Scenario, isEdit bool) {
                 if isEdit {
                     Edit Scenario: {scenario.Name}
                 } else {
-                    Create New Scenario
+                    Create New Service Scenario
                 }
             </h2>
             
@@ -27,17 +27,17 @@ templ ScenarioForm(scenario *Scenario, isEdit bool) {
             >
                 <!-- Basic Information Section -->
                 <div class="space-y-4">
-                    <h3 class="text-lg font-medium">Basic Information</h3>
+                    <h3 class="text-lg font-medium">Service Scenario Details</h3>
                     
                     <div class="form-control w-full">
                         <label class="label">
-                            <span class="label-text">Scenario Name</span>
+                            <span class="label-text">Scenario Title</span>
                         </label>
                         <input 
                             type="text" 
                             name="name" 
                             value={scenario.Name}
-                            placeholder="Enter scenario name" 
+                            placeholder="Enter a descriptive title for this service scenario"
                             class="input input-bordered w-full" 
                             required
                         />
@@ -49,7 +49,7 @@ templ ScenarioForm(scenario *Scenario, isEdit bool) {
                         </label>
                         <textarea 
                             name="description" 
-                            placeholder="Describe the scenario" 
+                            placeholder="Describe the service interaction, citizen needs, and expected outcomes"
                             class="textarea textarea-bordered h-24"
                             required
                         >{scenario.Description}</textarea>
@@ -61,12 +61,10 @@ templ ScenarioForm(scenario *Scenario, isEdit bool) {
                                 <span class="label-text">Category</span>
                             </label>
                             <select name="category" class="select select-bordered w-full">
-                                <option value="" disabled if scenario.Category == "" { selected }>Select category</option>
-                                <option value="Sales" if scenario.Category == "Sales" { selected }>Sales</option>
-                                <option value="Customer Service" if scenario.Category == "Customer Service" { selected }>Customer Service</option>
-                                <option value="Leadership" if scenario.Category == "Leadership" { selected }>Leadership</option>
-                                <option value="Conflict Resolution" if scenario.Category == "Conflict Resolution" { selected }>Conflict Resolution</option>
-                                <option value="Negotiation" if scenario.Category == "Negotiation" { selected }>Negotiation</option>
+                                <option value="" disabled if scenario.Category == "" { selected }>Select service category</option>
+                                for _, category := range ScenarioCategories() {
+                                    <option value={category} if scenario.Category == category { selected }>{category}</option>
+                                }
                             </select>
                         </div>
                         
@@ -75,11 +73,11 @@ templ ScenarioForm(scenario *Scenario, isEdit bool) {
                                 <span class="label-text">Difficulty Level</span>
                             </label>
                             <select name="difficulty" class="select select-bordered w-full">
-                                <option value="1" if scenario.Difficulty == 1 { selected }>Beginner</option>
-                                <option value="2" if scenario.Difficulty == 2 { selected }>Easy</option>
-                                <option value="3" if scenario.Difficulty == 3 { selected }>Intermediate</option>
-                                <option value="4" if scenario.Difficulty == 4 { selected }>Advanced</option>
-                                <option value="5" if scenario.Difficulty == 5 { selected }>Expert</option>
+                                <option value="1" if scenario.Difficulty == 1 { selected }>Basic Service Request</option>
+                                <option value="2" if scenario.Difficulty == 2 { selected }>Standard Procedure</option>
+                                <option value="3" if scenario.Difficulty == 3 { selected }>Complex Case</option>
+                                <option value="4" if scenario.Difficulty == 4 { selected }>Challenging Interaction</option>
+                                <option value="5" if scenario.Difficulty == 5 { selected }>Crisis Management</option>
                             </select>
                         </div>
                         
@@ -100,26 +98,25 @@ templ ScenarioForm(scenario *Scenario, isEdit bool) {
                     </div>
                 </div>
                 
-                <!-- Environment Settings -->
+                <!-- Service Environment -->
                 <div class="space-y-4">
-                    <h3 class="text-lg font-medium">Environment Settings</h3>
+                    <h3 class="text-lg font-medium">Service Environment</h3>
                     
                     <div class="form-control">
                         <label class="label">
-                            <span class="label-text">VR Scene</span>
+                            <span class="label-text">Service Location</span>
                         </label>
                         <select name="scene" class="select select-bordered w-full">
-                            <option value="office" if scenario.Scene == "office" { selected }>Office</option>
-                            <option value="meeting_room" if scenario.Scene == "meeting_room" { selected }>Meeting Room</option>
-                            <option value="retail_store" if scenario.Scene == "retail_store" { selected }>Retail Store</option>
-                            <option value="cafe" if scenario.Scene == "cafe" { selected }>Café</option>
-                            <option value="outdoor" if scenario.Scene == "outdoor" { selected }>Outdoor</option>
+                            <option value="" disabled if scenario.Scene == "" { selected }>Select location</option>
+                            for _, scene := range SceneTypes() {
+                                <option value={scene} if scenario.Scene == scene { selected }>{scene}</option>
+                            }
                         </select>
                     </div>
                     
                     <div class="form-control">
                         <label class="label cursor-pointer">
-                            <span class="label-text">Enable Background Noise</span>
+                            <span class="label-text">Simulate Busy Environment</span>
                             <input 
                                 type="checkbox" 
                                 name="background_noise" 
@@ -134,29 +131,30 @@ templ ScenarioForm(scenario *Scenario, isEdit bool) {
                 
                 <!-- Success Criteria -->
                 <div class="space-y-4">
-                    <h3 class="text-lg font-medium">Success Criteria</h3>
+                    <h3 class="text-lg font-medium">Service Standards</h3>
                     
                     <div class="form-control">
                         <label class="label">
-                            <span class="label-text">Success Definition</span>
+                            <span class="label-text">Success Criteria</span>
                         </label>
-                        <textarea 
-                            name="success_criteria" 
-                            placeholder="Define what constitutes success in this scenario" 
-                            class="textarea textarea-bordered h-24"
-                        >{scenario.SuccessCriteria}</textarea>
+                        <select name="success_criteria" class="select select-bordered w-full mb-4">
+                            <option value="" disabled if scenario.SuccessCriteria == "" { selected }>Select primary success criteria</option>
+                            for _, criteria := range SuccessCriteriaTypes() {
+                                <option value={criteria} if scenario.SuccessCriteria == criteria { selected }>{criteria}</option>
+                            }
+                        </select>
                     </div>
                     
                     <div class="form-control w-full">
                         <label class="label">
-                            <span class="label-text">Required Keywords</span>
+                            <span class="label-text">Service-Related Terms</span>
                             <span class="label-text-alt">Comma separated</span>
                         </label>
                         <input 
                             type="text" 
                             name="keywords" 
                             value={scenario.Keywords}
-                            placeholder="Enter keywords that should be used" 
+                            placeholder="Enter relevant procedures, forms, or service terms"
                             class="input input-bordered w-full" 
                         />
                     </div>

@@ -20,36 +20,36 @@ type Avatar struct {
 // PersonalityTypes returns available personality types
 func PersonalityTypes() []string {
 	return []string{
-		"Friendly",
-		"Professional",
-		"Challenging",
-		"Analytical",
-		"Empathetic",
-		"Technical",
-		"Difficult",
-		"Supportive",
+		"Frustrated Citizen",
+		"Confused Citizen",
+		"Demanding Citizen",
+		"Cooperative Citizen",
+		"Elderly Citizen",
+		"Language Barrier",
+		"Emotional Citizen",
+		"Time-Pressured Citizen",
 	}
 }
 
 // CommunicationStyles returns available communication styles
 func CommunicationStyles() []string {
 	return []string{
-		"Formal",
-		"Casual",
-		"Direct",
-		"Indirect",
-		"Detailed",
-		"Concise",
+		"Official",
+		"Approachable",
+		"Clear and Simple",
+		"Detailed Explanation",
+		"Patient and Supportive",
+		"Firm but Respectful",
 	}
 }
 
 // VoiceTypes returns available voice options
 func VoiceTypes() []string {
 	return []string{
-		"Natural",
-		"Robotic",
-		"Deep",
-		"High-pitched",
-		"Accented",
+		"Clear Native Speaker",
+		"Non-Native Speaker",
+		"Elderly Voice",
+		"Emotional Tone",
+		"Soft-Spoken",
 	}
 }

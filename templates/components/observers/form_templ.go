@@ -55,7 +55,7 @@ func ObserverForm(observer *Observer, isEdit bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Create New Observer")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Create New Training Supervisor")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -88,7 +88,7 @@ func ObserverForm(observer *Observer, isEdit bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/observers\" class=\"space-y-6\"><!-- Basic Information Section --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Basic Information</h3><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Observer Name</span></label> <input type=\"text\" name=\"name\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/observers\" class=\"space-y-6\"><!-- Basic Information Section --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Supervisor Information</h3><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Supervisor Name</span></label> <input type=\"text\" name=\"name\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -101,7 +101,7 @@ func ObserverForm(observer *Observer, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" placeholder=\"Enter observer name\" class=\"input input-bordered w-full\" required></div><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Description</span></label> <textarea name=\"description\" placeholder=\"Describe the observer&#39;s role and purpose\" class=\"textarea textarea-bordered h-24\" required>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" placeholder=\"Enter supervisor&#39;s name\" class=\"input input-bordered w-full\" required></div><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Description</span></label> <textarea name=\"description\" placeholder=\"Describe the supervisor&#39;s role and evaluation focus in public service training\" class=\"textarea textarea-bordered h-24\" required>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -124,7 +124,7 @@ func ObserverForm(observer *Observer, isEdit bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "> <span class=\"label-text\">Observer Active</span></label> <label class=\"label\"><span class=\"label-text-alt\">Enable this observer for training sessions</span></label></div></div><!-- Feedback Settings --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Feedback Settings</h3><div class=\"grid grid-cols-1 md:grid-cols-2 gap-4\"><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Feedback Style</span></label> <select name=\"feedback_style\" class=\"select select-bordered w-full\"><option value=\"\" disabled")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "> <span class=\"label-text\">Supervisor Active</span></label> <label class=\"label\"><span class=\"label-text-alt\">Enable this supervisor for service training evaluations</span></label></div></div><!-- Feedback Settings --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Evaluation Settings</h3><div class=\"grid grid-cols-1 md:grid-cols-2 gap-4\"><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Feedback Style</span></label> <select name=\"feedback_style\" class=\"select select-bordered w-full\"><option value=\"\" disabled")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -236,7 +236,7 @@ func ObserverForm(observer *Observer, isEdit bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</select></div></div><div class=\"grid grid-cols-1 md:grid-cols-2 gap-6\"><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Intervention Level (1-5)</span> <span class=\"label-text-alt\">How often to interrupt</span></label><div class=\"flex items-center gap-4\"><input type=\"range\" name=\"intervention_level\" min=\"1\" max=\"5\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</select></div></div><div class=\"grid grid-cols-1 md:grid-cols-2 gap-6\"><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Guidance Frequency (1-5)</span> <span class=\"label-text-alt\">How often to provide direction</span></label><div class=\"flex items-center gap-4\"><input type=\"range\" name=\"intervention_level\" min=\"1\" max=\"5\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -249,7 +249,7 @@ func ObserverForm(observer *Observer, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\" class=\"range range-primary\"><div class=\"flex justify-between w-full px-2\"><span class=\"text-xs\">Minimal</span> <span class=\"badge badge-primary\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "\" class=\"range range-primary\"><div class=\"flex justify-between w-full px-2\"><span class=\"text-xs\">As Needed</span> <span class=\"badge badge-primary\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -262,7 +262,7 @@ func ObserverForm(observer *Observer, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</span> <span class=\"text-xs\">Frequent</span></div></div></div><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Detail Level (1-5)</span> <span class=\"label-text-alt\">Depth of feedback</span></label><div class=\"flex items-center gap-4\"><input type=\"range\" name=\"detail_level\" min=\"1\" max=\"5\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</span> <span class=\"text-xs\">Regular</span></div></div></div><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Assessment Detail (1-5)</span> <span class=\"label-text-alt\">Depth of evaluation</span></label><div class=\"flex items-center gap-4\"><input type=\"range\" name=\"detail_level\" min=\"1\" max=\"5\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -288,7 +288,7 @@ func ObserverForm(observer *Observer, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "</span> <span class=\"text-xs\">Detailed</span></div></div></div></div></div><!-- Success Metrics --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Success Metrics</h3><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Success Definition</span></label> <textarea name=\"success_metrics\" placeholder=\"Define what constitutes success in observed training sessions\" class=\"textarea textarea-bordered h-24\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "</span> <span class=\"text-xs\">Detailed</span></div></div></div></div></div><!-- Success Metrics --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Service Standards Assessment</h3><div class=\"form-control\"><label class=\"label\"><span class=\"label-text\">Service Quality Metrics</span></label> <textarea name=\"success_metrics\" placeholder=\"Define the key service quality indicators and standards to be evaluated\" class=\"textarea textarea-bordered h-24\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -301,7 +301,7 @@ func ObserverForm(observer *Observer, isEdit bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</textarea></div></div><!-- Intervention Triggers --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Intervention Triggers</h3><p class=\"text-sm text-gray-600\">Select events that should trigger observer intervention</p><div class=\"grid grid-cols-1 md:grid-cols-2 gap-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</textarea></div></div><!-- Intervention Triggers --><div class=\"space-y-4\"><h3 class=\"text-lg font-medium\">Intervention Points</h3><p class=\"text-sm text-gray-600\">Select situations that require supervisor guidance</p><div class=\"grid grid-cols-1 md:grid-cols-2 gap-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -347,7 +347,7 @@ func ObserverForm(observer *Observer, isEdit bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</div><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Custom Triggers</span> <span class=\"label-text-alt\">One per line</span></label> <textarea name=\"custom_triggers\" placeholder=\"Enter any custom intervention triggers\" class=\"textarea textarea-bordered h-20\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</div><div class=\"form-control w-full\"><label class=\"label\"><span class=\"label-text\">Additional Intervention Points</span> <span class=\"label-text-alt\">One per line</span></label> <textarea name=\"custom_triggers\" placeholder=\"Enter specific service situations requiring intervention\" class=\"textarea textarea-bordered h-20\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

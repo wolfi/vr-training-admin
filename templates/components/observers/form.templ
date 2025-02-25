@@ -13,7 +13,7 @@ templ ObserverForm(observer *Observer, isEdit bool) {
                 if isEdit {
                     Edit Observer: {observer.Name}
                 } else {
-                    Create New Observer
+                    Create New Training Supervisor
                 }
             </h2>
             
@@ -30,17 +30,17 @@ templ ObserverForm(observer *Observer, isEdit bool) {
             >
                 <!-- Basic Information Section -->
                 <div class="space-y-4">
-                    <h3 class="text-lg font-medium">Basic Information</h3>
+                    <h3 class="text-lg font-medium">Supervisor Information</h3>
                     
                     <div class="form-control w-full">
                         <label class="label">
-                            <span class="label-text">Observer Name</span>
+                            <span class="label-text">Supervisor Name</span>
                         </label>
                         <input 
                             type="text" 
                             name="name" 
                             value={observer.Name}
-                            placeholder="Enter observer name" 
+                            placeholder="Enter supervisor's name"
                             class="input input-bordered w-full" 
                             required
                         />
@@ -52,7 +52,7 @@ templ ObserverForm(observer *Observer, isEdit bool) {
                         </label>
                         <textarea 
                             name="description" 
-                            placeholder="Describe the observer's role and purpose" 
+                            placeholder="Describe the supervisor's role and evaluation focus in public service training"
                             class="textarea textarea-bordered h-24"
                             required
                         >{observer.Description}</textarea>
@@ -68,17 +68,17 @@ templ ObserverForm(observer *Observer, isEdit bool) {
                                     checked
                                 }
                             />
-                            <span class="label-text">Observer Active</span>
+                            <span class="label-text">Supervisor Active</span>
                         </label>
                         <label class="label">
-                            <span class="label-text-alt">Enable this observer for training sessions</span>
+                            <span class="label-text-alt">Enable this supervisor for service training evaluations</span>
                         </label>
                     </div>
                 </div>
                 
                 <!-- Feedback Settings -->
                 <div class="space-y-4">
-                    <h3 class="text-lg font-medium">Feedback Settings</h3>
+                    <h3 class="text-lg font-medium">Evaluation Settings</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="form-control">
@@ -109,8 +109,8 @@ templ ObserverForm(observer *Observer, isEdit bool) {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="form-control">
                             <label class="label">
-                                <span class="label-text">Intervention Level (1-5)</span>
-                                <span class="label-text-alt">How often to interrupt</span>
+                                <span class="label-text">Guidance Frequency (1-5)</span>
+                                <span class="label-text-alt">How often to provide direction</span>
                             </label>
                             <div class="flex items-center gap-4">
                                 <input 
@@ -122,17 +122,17 @@ templ ObserverForm(observer *Observer, isEdit bool) {
                                     class="range range-primary" 
                                 />
                                 <div class="flex justify-between w-full px-2">
-                                    <span class="text-xs">Minimal</span>
+                                    <span class="text-xs">As Needed</span>
                                     <span class="badge badge-primary">{fmt.Sprint(observer.InterventionLevel)}</span>
-                                    <span class="text-xs">Frequent</span>
+                                    <span class="text-xs">Regular</span>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="form-control">
                             <label class="label">
-                                <span class="label-text">Detail Level (1-5)</span>
-                                <span class="label-text-alt">Depth of feedback</span>
+                                <span class="label-text">Assessment Detail (1-5)</span>
+                                <span class="label-text-alt">Depth of evaluation</span>
                             </label>
                             <div class="flex items-center gap-4">
                                 <input 
@@ -155,15 +155,15 @@ templ ObserverForm(observer *Observer, isEdit bool) {
                 
                 <!-- Success Metrics -->
                 <div class="space-y-4">
-                    <h3 class="text-lg font-medium">Success Metrics</h3>
+                    <h3 class="text-lg font-medium">Service Standards Assessment</h3>
                     
                     <div class="form-control">
                         <label class="label">
-                            <span class="label-text">Success Definition</span>
+                            <span class="label-text">Service Quality Metrics</span>
                         </label>
                         <textarea 
                             name="success_metrics" 
-                            placeholder="Define what constitutes success in observed training sessions" 
+                            placeholder="Define the key service quality indicators and standards to be evaluated"
                             class="textarea textarea-bordered h-24"
                         >{observer.SuccessMetrics}</textarea>
                     </div>
@@ -171,8 +171,8 @@ templ ObserverForm(observer *Observer, isEdit bool) {
                 
                 <!-- Intervention Triggers -->
                 <div class="space-y-4">
-                    <h3 class="text-lg font-medium">Intervention Triggers</h3>
-                    <p class="text-sm text-gray-600">Select events that should trigger observer intervention</p>
+                    <h3 class="text-lg font-medium">Intervention Points</h3>
+                    <p class="text-sm text-gray-600">Select situations that require supervisor guidance</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                         for _, trigger := range CommonTriggers() {
@@ -195,12 +195,12 @@ templ ObserverForm(observer *Observer, isEdit bool) {
                     
                     <div class="form-control w-full">
                         <label class="label">
-                            <span class="label-text">Custom Triggers</span>
+                            <span class="label-text">Additional Intervention Points</span>
                             <span class="label-text-alt">One per line</span>
                         </label>
                         <textarea 
                             name="custom_triggers" 
-                            placeholder="Enter any custom intervention triggers" 
+                            placeholder="Enter specific service situations requiring intervention"
                             class="textarea textarea-bordered h-20"
                         >{getCustomTriggers(observer.InterventionTriggers)}</textarea>
                     </div>

@@ -17,37 +17,39 @@ type Observer struct {
 // FeedbackStyles returns available feedback styles
 func FeedbackStyles() []string {
 	return []string{
-		"Supportive",
-		"Challenging",
-		"Analytical",
-		"Instructional",
-		"Socratic",
-		"Direct",
+		"Service Standards Focus",
+		"Procedure Compliance",
+		"Citizen Experience",
+		"Communication Quality",
+		"Problem-Solving Process",
+		"Policy Implementation",
 	}
 }
 
 // FeedbackTones returns available feedback tones
 func FeedbackTones() []string {
 	return []string{
-		"Formal",
-		"Casual",
-		"Encouraging",
-		"Neutral",
-		"Authoritative",
-		"Gentle",
+		"Professional",
+		"Constructive",
+		"Service-Oriented",
+		"Objective",
+		"Instructive",
+		"Supportive",
 	}
 }
 
 // CommonTriggers returns common intervention triggers
 func CommonTriggers() []string {
 	return []string{
-		"Off-topic conversation",
-		"Inappropriate communication",
-		"Silence over 10 seconds",
-		"Missed opportunity",
-		"Incorrect information shared",
-		"Customer frustration detected",
-		"Talking over the customer",
-		"Success criteria met",
+		"Incorrect procedure application",
+		"Privacy/confidentiality breach",
+		"Citizen distress indicators",
+		"Service standards deviation",
+		"Documentation errors",
+		"Communication barriers",
+		"Policy misinterpretation",
+		"Escalation requirements missed",
+		"Successful resolution achieved",
+		"Proper referral needed",
 	}
 }
