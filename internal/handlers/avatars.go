@@ -12,10 +12,10 @@ import (
 	"github.com/saladinomario/vr-training-admin/templates/pages"
 )
 
-var avatarStore *models.AvatarStore
+var AvatarStore *models.AvatarStore
 
 func init() {
-	avatarStore = models.NewAvatarStore()
+	AvatarStore = models.NewAvatarStore()
 }
 
 // AvatarsHandler handles the avatars index page
@@ -30,7 +30,7 @@ func AvatarsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	allAvatars := avatarStore.GetAll()
+	allAvatars := AvatarStore.GetAll()
 	component := pages.AvatarsIndex(allAvatars)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -71,7 +71,7 @@ func AvatarEditHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get avatar by ID
-	avatar, err := avatarStore.GetByID(idStr)
+	avatar, err := AvatarStore.GetByID(idStr)
 	if err != nil {
 		http.NotFound(w, r)
 		return
@@ -102,7 +102,7 @@ func AvatarCreateHandler(w http.ResponseWriter, r *http.Request) {
 	avatar := parseAvatarForm(r)
 
 	// Create avatar
-	_, err := avatarStore.Create(avatar)
+	_, err := AvatarStore.Create(avatar)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -110,7 +110,7 @@ func AvatarCreateHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If this is an HTMX request, return the main content
 	if r.Header.Get("HX-Request") == "true" {
-		allAvatars := avatarStore.GetAll()
+		allAvatars := AvatarStore.GetAll()
 		component := pages.AvatarsMainContent(allAvatars)
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -148,7 +148,7 @@ func AvatarUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	avatar := parseAvatarForm(r)
 
 	// Update avatar
-	err := avatarStore.Update(idStr, avatar)
+	err := AvatarStore.Update(idStr, avatar)
 	if err != nil {
 		if err == models.ErrAvatarNotFound {
 			http.NotFound(w, r)
@@ -160,7 +160,7 @@ func AvatarUpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If this is an HTMX request, return the main content
 	if r.Header.Get("HX-Request") == "true" {
-		allAvatars := avatarStore.GetAll()
+		allAvatars := AvatarStore.GetAll()
 		component := pages.AvatarsMainContent(allAvatars)
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -190,7 +190,7 @@ func AvatarDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Delete avatar
-	err := avatarStore.Delete(idStr)
+	err := AvatarStore.Delete(idStr)
 	if err != nil {
 		if err == models.ErrAvatarNotFound {
 			http.NotFound(w, r)
@@ -202,7 +202,7 @@ func AvatarDeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If this is an HTMX request, return the updated avatar list
 	if r.Header.Get("HX-Request") == "true" {
-		allAvatars := avatarStore.GetAll()
+		allAvatars := AvatarStore.GetAll()
 		component := avatars.AvatarList(allAvatars)
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -225,7 +225,7 @@ func AvatarSearchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := r.URL.Query().Get("q")
-	foundAvatars := avatarStore.Search(query)
+	foundAvatars := AvatarStore.Search(query)
 
 	component := avatars.AvatarList(foundAvatars)
 

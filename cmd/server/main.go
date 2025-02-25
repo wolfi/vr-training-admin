@@ -1,3 +1,4 @@
+// Update to main.go to register session routes
 package main
 
 import (
@@ -18,7 +19,7 @@ func setupRoutes() *http.ServeMux {
 	// Register dashboard handler
 	log.Println("Registering dashboard route")
 	mux.HandleFunc("/", handlers.DashboardHandler)
-
+	mux.HandleFunc("/dashboard-content", handlers.DashboardContentHandler)
 	// Register scenario routes
 	log.Println("Setting up scenario routes")
 	handlers.SetupScenarioRoutes(mux)
@@ -34,6 +35,10 @@ func setupRoutes() *http.ServeMux {
 	// Register settings routes
 	log.Println("Setting up settings routes")
 	handlers.SetupSettingsRoutes(mux)
+
+	// Register session routes (new)
+	log.Println("Setting up session routes")
+	handlers.SetupSessionRoutes(mux)
 
 	// Serve static files
 	log.Println("Setting up static file server")

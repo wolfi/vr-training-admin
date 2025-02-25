@@ -1,0 +1,148 @@
+// templates/components/sessions/session.templ
+package sessions
+
+import (
+	"fmt"
+	"time"
+	
+	"github.com/saladinomario/vr-training-admin/templates/components/avatars"
+	"github.com/saladinomario/vr-training-admin/templates/components/observers"
+	"github.com/saladinomario/vr-training-admin/templates/components/scenarios"
+)
+
+// Format time to a readable string
+func formatTime(t time.Time) string {
+	return t.Format("2006-01-02 15:04:05")
+}
+
+// SessionForm displays the form to start a new session
+templ SessionForm(scenarios []scenarios.Scenario, avatars []avatars.Avatar, observers []observers.Observer) {
+	<div class="card bg-base-100 shadow-xl">
+		<div class="card-body">
+			<h2 class="card-title mb-4">Start New Training Session</h2>
+			<form 
+				class="space-y-4" 
+				hx-post="/sessions/start" 
+				hx-target="#main-content" 
+				hx-swap="innerHTML" 
+				hx-push-url="/"
+			>
+				<div class="form-control">
+					<label class="label">
+						<span class="label-text">Select Scenario</span>
+					</label>
+					<select name="scenario_id" class="select select-bordered w-full" required>
+						<option value="" disabled selected>Choose a scenario</option>
+						for _, scenario := range scenarios {
+							<option value={scenario.ID}>{scenario.Name}</option>
+						}
+					</select>
+				</div>
+				
+				<div class="form-control">
+					<label class="label">
+						<span class="label-text">Select Avatar</span>
+					</label>
+					<select name="avatar_id" class="select select-bordered w-full" required>
+						<option value="" disabled selected>Choose an avatar</option>
+						for _, avatar := range avatars {
+							<option value={avatar.ID}>{avatar.Name}</option>
+						}
+					</select>
+				</div>
+				
+				<div class="form-control">
+					<label class="label">
+						<span class="label-text">Select Observer</span>
+					</label>
+					<select name="observer_id" class="select select-bordered w-full" required>
+						<option value="" disabled selected>Choose an observer</option>
+						for _, observer := range observers {
+							<option value={observer.ID}>{observer.Name}</option>
+						}
+					</select>
+				</div>
+				
+				<div class="card-actions justify-end mt-6">
+					<a href="/" class="btn btn-ghost">Cancel</a>
+					<button type="submit" class="btn btn-primary">Start Session</button>
+				</div>
+			</form>
+		</div>
+	</div>
+}
+
+// SessionList displays a list of recent sessions
+templ SessionList(sessions []*Session) {
+	<div class="overflow-x-auto">
+		<table class="table w-full">
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Session ID</th>
+					<th>Status</th>
+					<th>Duration</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				for _, session := range sessions {
+					<tr>
+						<td>{formatTime(session.StartTime)}</td>
+						<td>{session.ID}</td>
+						<td><span class={"badge " + session.GetStatusClass()}>{session.Status}</span></td>
+						<td>{session.GetFormattedDuration()}</td>
+						<td class="space-x-2">
+							if session.Status == StatusRunning {
+								<button 
+									class="btn btn-warning btn-xs"
+									hx-post={fmt.Sprintf("/sessions/%s", session.ID)}
+									hx-vals='{"status": "paused"}'
+									hx-target="#recent-activity"
+									hx-swap="innerHTML"
+								>
+									Pause
+								</button>
+								<button 
+									class="btn btn-success btn-xs"
+									hx-post={fmt.Sprintf("/sessions/%s", session.ID)}
+									hx-vals='{"status": "completed"}'
+									hx-target="#recent-activity"
+									hx-swap="innerHTML"
+								>
+									Complete
+								</button>
+							} else if session.Status == StatusPaused {
+								<button 
+									class="btn btn-primary btn-xs"
+									hx-post={fmt.Sprintf("/sessions/%s", session.ID)}
+									hx-vals='{"status": "running"}'
+									hx-target="#recent-activity"
+									hx-swap="innerHTML"
+								>
+									Resume
+								</button>
+								<button 
+									class="btn btn-success btn-xs"
+									hx-post={fmt.Sprintf("/sessions/%s", session.ID)}
+									hx-vals='{"status": "completed"}'
+									hx-target="#recent-activity"
+									hx-swap="innerHTML"
+								>
+									Complete
+								</button>
+							} else {
+								<button class="btn btn-ghost btn-xs">View</button>
+							}
+						</td>
+					</tr>
+				}
+				if len(sessions) == 0 {
+					<tr>
+						<td colspan="5" class="text-center py-4">No sessions found</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}

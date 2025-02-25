@@ -12,10 +12,10 @@ import (
 	"github.com/saladinomario/vr-training-admin/templates/pages"
 )
 
-var observerStore *models.ObserverStore
+var ObserverStore *models.ObserverStore
 
 func init() {
-	observerStore = models.NewObserverStore()
+	ObserverStore = models.NewObserverStore()
 }
 
 // ObserversHandler handles the observers index page
@@ -30,7 +30,7 @@ func ObserversHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	allObservers := observerStore.GetAll()
+	allObservers := ObserverStore.GetAll()
 	component := pages.ObserversIndex(allObservers)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -71,7 +71,7 @@ func ObserverEditHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get observer by ID
-	observer, err := observerStore.GetByID(idStr)
+	observer, err := ObserverStore.GetByID(idStr)
 	if err != nil {
 		http.NotFound(w, r)
 		return
@@ -102,7 +102,7 @@ func ObserverCreateHandler(w http.ResponseWriter, r *http.Request) {
 	observer := parseObserverForm(r)
 
 	// Create observer
-	_, err := observerStore.Create(observer)
+	_, err := ObserverStore.Create(observer)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -110,7 +110,7 @@ func ObserverCreateHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If this is an HTMX request, return the main content
 	if r.Header.Get("HX-Request") == "true" {
-		allObservers := observerStore.GetAll()
+		allObservers := ObserverStore.GetAll()
 		component := pages.ObserversContent(allObservers)
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -148,7 +148,7 @@ func ObserverUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	observer := parseObserverForm(r)
 
 	// Update observer
-	err := observerStore.Update(idStr, observer)
+	err := ObserverStore.Update(idStr, observer)
 	if err != nil {
 		if err == models.ErrObserverNotFound {
 			http.NotFound(w, r)
@@ -160,7 +160,7 @@ func ObserverUpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If this is an HTMX request, return the main content
 	if r.Header.Get("HX-Request") == "true" {
-		allObservers := observerStore.GetAll()
+		allObservers := ObserverStore.GetAll()
 		component := pages.ObserversContent(allObservers)
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -190,7 +190,7 @@ func ObserverDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Delete observer
-	err := observerStore.Delete(idStr)
+	err := ObserverStore.Delete(idStr)
 	if err != nil {
 		if err == models.ErrObserverNotFound {
 			http.NotFound(w, r)
@@ -202,7 +202,7 @@ func ObserverDeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If this is an HTMX request, return the updated observer list
 	if r.Header.Get("HX-Request") == "true" {
-		allObservers := observerStore.GetAll()
+		allObservers := ObserverStore.GetAll()
 		component := observers.ObserverList(allObservers)
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -225,7 +225,7 @@ func ObserverSearchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := r.URL.Query().Get("q")
-	foundObservers := observerStore.Search(query)
+	foundObservers := ObserverStore.Search(query)
 
 	component := observers.ObserverList(foundObservers)
 

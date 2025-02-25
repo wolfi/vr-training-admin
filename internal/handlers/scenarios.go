@@ -12,10 +12,10 @@ import (
 	"github.com/saladinomario/vr-training-admin/templates/pages"
 )
 
-var scenarioStore *models.ScenarioStore
+var ScenarioStore *models.ScenarioStore
 
 func init() {
-	scenarioStore = models.NewScenarioStore()
+	ScenarioStore = models.NewScenarioStore()
 }
 
 // ScenariosHandler handles the scenarios index page
@@ -30,7 +30,7 @@ func ScenariosHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	allScenarios := scenarioStore.GetAll()
+	allScenarios := ScenarioStore.GetAll()
 	component := pages.ScenariosIndex(allScenarios)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -71,7 +71,7 @@ func ScenarioEditHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get scenario by ID
-	scenario, err := scenarioStore.GetByID(idStr)
+	scenario, err := ScenarioStore.GetByID(idStr)
 	if err != nil {
 		http.NotFound(w, r)
 		return
@@ -102,7 +102,7 @@ func ScenarioCreateHandler(w http.ResponseWriter, r *http.Request) {
 	scenario := parseScenarioForm(r)
 
 	// Create scenario
-	_, err := scenarioStore.Create(scenario)
+	_, err := ScenarioStore.Create(scenario)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -110,7 +110,7 @@ func ScenarioCreateHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If this is an HTMX request, return the updated content
 	if r.Header.Get("HX-Request") == "true" {
-		allScenarios := scenarioStore.GetAll()
+		allScenarios := ScenarioStore.GetAll()
 		component := pages.ScenariosContent(allScenarios)
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -148,7 +148,7 @@ func ScenarioUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	scenario := parseScenarioForm(r)
 
 	// Update scenario
-	err := scenarioStore.Update(idStr, scenario)
+	err := ScenarioStore.Update(idStr, scenario)
 	if err != nil {
 		if err == models.ErrScenarioNotFound {
 			http.NotFound(w, r)
@@ -160,7 +160,7 @@ func ScenarioUpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If this is an HTMX request, return the updated content
 	if r.Header.Get("HX-Request") == "true" {
-		allScenarios := scenarioStore.GetAll()
+		allScenarios := ScenarioStore.GetAll()
 		component := pages.ScenariosContent(allScenarios)
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -190,7 +190,7 @@ func ScenarioDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Delete scenario
-	err := scenarioStore.Delete(idStr)
+	err := ScenarioStore.Delete(idStr)
 	if err != nil {
 		if err == models.ErrScenarioNotFound {
 			http.NotFound(w, r)
@@ -202,7 +202,7 @@ func ScenarioDeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If this is an HTMX request, return the updated scenario list
 	if r.Header.Get("HX-Request") == "true" {
-		allScenarios := scenarioStore.GetAll()
+		allScenarios := ScenarioStore.GetAll()
 		component := scenarios.ScenarioList(allScenarios)
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -225,7 +225,7 @@ func ScenarioSearchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query := r.URL.Query().Get("q")
-	foundScenarios := scenarioStore.Search(query)
+	foundScenarios := ScenarioStore.Search(query)
 
 	component := scenarios.ScenarioList(foundScenarios)
 

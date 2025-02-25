@@ -27,3 +27,23 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// DashboardContentHandler handles the AJAX request for dashboard content
+func DashboardContentHandler(w http.ResponseWriter, r *http.Request) {
+	// Get recent sessions and render dashboard content
+	recentSessions := SessionStore.GetRecent(5)
+
+	// Ensure we're using the proper capitalized store variables
+	_ = ScenarioStore
+	_ = AvatarStore
+	_ = ObserverStore
+	component := pages.DashboardContent(recentSessions)
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	err := component.Render(r.Context(), w)
+	if err != nil {
+		log.Printf("Error rendering dashboard content: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+}

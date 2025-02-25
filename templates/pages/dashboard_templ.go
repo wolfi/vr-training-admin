@@ -10,8 +10,12 @@ package pages
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/saladinomario/vr-training-admin/templates/components"
+import (
+	"github.com/saladinomario/vr-training-admin/templates/components"
+	"github.com/saladinomario/vr-training-admin/templates/components/sessions"
+)
 
+// templates/pages/dashboard.templ
 func Dashboard() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -45,13 +49,87 @@ func Dashboard() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"container mx-auto p-6\"><div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6\"><!-- Scenarios Overview --><div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\"><span class=\"text-primary\">Training Scenarios</span></h2><div class=\"stats shadow\"><div class=\"stat\"><div class=\"stat-title\">Active</div><div class=\"stat-value\">3</div><div class=\"stat-desc\">Training scenarios ready</div></div></div><div class=\"card-actions justify-end\"><a href=\"/scenarios\" class=\"btn btn-primary btn-sm\">Manage Scenarios</a></div></div></div><!-- Avatar Stats --><div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\"><span class=\"text-secondary\">Training Avatars</span></h2><div class=\"stats shadow\"><div class=\"stat\"><div class=\"stat-title\">Configured</div><div class=\"stat-value\">2</div><div class=\"stat-desc\">Active training avatars</div></div></div><div class=\"card-actions justify-end\"><a href=\"/avatars\" class=\"btn btn-secondary btn-sm\">Configure Avatars</a></div></div></div><!-- Observer Setup --><div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\"><span class=\"text-accent\">Training Observer</span></h2><div class=\"stats shadow\"><div class=\"stat\"><div class=\"stat-title\">Status</div><div class=\"stat-value text-success\">2 Active</div><div class=\"stat-desc\">Monitoring sessions</div></div></div><div class=\"card-actions justify-end\"><a href=\"/observers\" class=\"btn btn-accent btn-sm\">Observer Settings</a></div></div></div></div><!-- Recent Activity --><div class=\"mt-8\"><h2 class=\"text-2xl font-bold mb-4\">Recent Activity</h2><div class=\"overflow-x-auto\"><table class=\"table w-full\"><thead><tr><th>Date</th><th>Activity</th><th>Status</th><th>Action</th></tr></thead> <tbody><tr><td>2024-02-24</td><td>Sales Training #1</td><td><span class=\"badge badge-success\">Completed</span></td><td><button class=\"btn btn-ghost btn-xs\">View</button></td></tr><tr><td>2024-02-24</td><td>Customer Service Scenario</td><td><span class=\"badge badge-warning\">In Progress</span></td><td><button class=\"btn btn-ghost btn-xs\">View</button></td></tr></tbody></table></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"main-content\" hx-get=\"/dashboard-content\" hx-trigger=\"load\"><!-- Content will be loaded via HTMX --></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
 		templ_7745c5c3_Err = components.Layout("Dashboard").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func DashboardContent(recentSessions []*sessions.Session) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"container mx-auto p-6\"><!-- Main Stats Grid --><div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6\"><!-- Scenarios Overview --><div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\"><span class=\"text-primary\">Training Scenarios</span></h2><div class=\"stats shadow\"><div class=\"stat\"><div class=\"stat-title\">Active</div><div class=\"stat-value\">3</div><div class=\"stat-desc\">Training scenarios ready</div></div></div><div class=\"card-actions justify-end\"><a href=\"/scenarios\" class=\"btn btn-primary btn-sm\">Manage Scenarios</a></div></div></div><!-- Avatar Stats --><div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\"><span class=\"text-secondary\">Training Avatars</span></h2><div class=\"stats shadow\"><div class=\"stat\"><div class=\"stat-title\">Configured</div><div class=\"stat-value\">2</div><div class=\"stat-desc\">Active training avatars</div></div></div><div class=\"card-actions justify-end\"><a href=\"/avatars\" class=\"btn btn-secondary btn-sm\">Configure Avatars</a></div></div></div><!-- Observer Setup --><div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\"><span class=\"text-accent\">Training Observer</span></h2><div class=\"stats shadow\"><div class=\"stat\"><div class=\"stat-title\">Status</div><div class=\"stat-value text-success\">2 Active</div><div class=\"stat-desc\">Monitoring sessions</div></div></div><div class=\"card-actions justify-end\"><a href=\"/observers\" class=\"btn btn-accent btn-sm\">Observer Settings</a></div></div></div></div><!-- Start Session and Recent Activity --><div class=\"grid grid-cols-1 lg:grid-cols-4 gap-6 mt-8\"><!-- Start New Session Card --><div class=\"lg:col-span-1\"><div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\">Start Session</h2><p class=\"text-sm\">Launch a new VR training session with your selected scenario, avatar, and observer.</p><div class=\"card-actions justify-center mt-4\"><a href=\"/sessions/new\" class=\"btn btn-primary btn-wide\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5 mr-2\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z\" clip-rule=\"evenodd\"></path></svg> Start Training</a></div></div></div></div><!-- Recent Activity --><div class=\"lg:col-span-3\"><div id=\"recent-activity\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = RecentActivity(recentSessions).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></div></div></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func RecentActivity(recentSessions []*sessions.Session) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"card bg-base-100 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title mb-4\">Recent Activity</h2>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = sessions.SessionList(recentSessions).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"card-actions justify-end mt-4\"><a href=\"/sessions\" class=\"btn btn-ghost btn-sm\">View All Sessions</a></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

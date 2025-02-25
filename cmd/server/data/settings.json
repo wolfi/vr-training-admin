@@ -1,0 +1,26 @@
+{
+  "llm": {
+    "ID": "default",
+    "Provider": "Google Vertex AI",
+    "APIKey": "",
+    "Model": "gemini-pro",
+    "MaxTokens": 1024,
+    "Temperature": 0.7,
+    "TopP": 0.95,
+    "FrequencyPenalty": 0,
+    "PresencePenalty": 0,
+    "ProjectID": "",
+    "Location": "us-central1",
+    "Endpoint": "",
+    "ServiceAccountKey": ""
+  },
+  "general": {
+    "ApplicationName": "VR Training Admin",
+    "LogLevel": "INFO",
+    "MaxConcurrentSessions": 10,
+    "SessionTimeout": 60,
+    "RecordSessions": true,
+    "StoreSessionData": true,
+    "DataRetentionDays": 90
+  }
+}
