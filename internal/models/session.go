@@ -150,11 +150,7 @@ func (s *SessionStore) GetByID(id string) (*sessions.Session, error) {
 }
 
 // Update the Create method:
-
 func (s *SessionStore) Create(scenarioID, avatarID, observerID string) (*sessions.Session, error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
 	// Generate ID based on timestamp
 	id := "session_" + time.Now().Format("20060102150405")
 
@@ -169,7 +165,9 @@ func (s *SessionStore) Create(scenarioID, avatarID, observerID string) (*session
 		UpdateTime: time.Now(),
 	}
 
+	s.mu.Lock()
 	s.sessions[id] = session
+	s.mu.Unlock()
 
 	// Save to disk synchronously
 	err := s.saveSessions()
@@ -186,7 +184,6 @@ func (s *SessionStore) Create(scenarioID, avatarID, observerID string) (*session
 
 func (s *SessionStore) Update(id string, status string) error {
 	s.mu.Lock()
-	defer s.mu.Unlock()
 
 	session, ok := s.sessions[id]
 	if !ok {
@@ -203,6 +200,8 @@ func (s *SessionStore) Update(id string, status string) error {
 		session.EndTime = &now
 	}
 
+	s.mu.Unlock()
+
 	// Save to disk synchronously
 	err := s.saveSessions()
 	if err != nil {
@@ -214,12 +213,11 @@ func (s *SessionStore) Update(id string, status string) error {
 
 // Delete removes a session
 func (s *SessionStore) Delete(id string) error {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
+	s.mu.RLock()
 	if _, ok := s.sessions[id]; !ok {
 		return ErrSessionNotFound
 	}
+	s.mu.RUnlock()
 
 	delete(s.sessions, id)
 
