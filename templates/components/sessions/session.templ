@@ -4,7 +4,7 @@ package sessions
 import (
 	"fmt"
 	"time"
-
+	
 	"github.com/saladinomario/vr-training-admin/templates/components/avatars"
 	"github.com/saladinomario/vr-training-admin/templates/components/observers"
 	"github.com/saladinomario/vr-training-admin/templates/components/scenarios"
@@ -20,11 +20,11 @@ templ SessionForm(scenarios []scenarios.Scenario, avatars []avatars.Avatar, obse
 	<div class="card bg-base-100 shadow-xl">
 		<div class="card-body">
 			<h2 class="card-title mb-4">Start New Training Session</h2>
-			<form
-				class="space-y-4"
-				hx-post="/sessions/start"
-				hx-target="#main-content"
-				hx-swap="innerHTML"
+			<form 
+				class="space-y-4" 
+				hx-post="/sessions/start" 
+				hx-target="#main-content" 
+				hx-swap="innerHTML" 
 				hx-push-url="/"
 			>
 				<div class="form-control">
@@ -34,10 +34,11 @@ templ SessionForm(scenarios []scenarios.Scenario, avatars []avatars.Avatar, obse
 					<select name="scenario_id" class="select select-bordered w-full" required>
 						<option value="" disabled selected>Choose a scenario</option>
 						for _, scenario := range scenarios {
-							<option value={ scenario.ID }>{ scenario.Name }</option>
+							<option value={scenario.ID}>{scenario.Name}</option>
 						}
 					</select>
 				</div>
+				
 				<div class="form-control">
 					<label class="label">
 						<span class="label-text">Select Avatar</span>
@@ -45,10 +46,11 @@ templ SessionForm(scenarios []scenarios.Scenario, avatars []avatars.Avatar, obse
 					<select name="avatar_id" class="select select-bordered w-full" required>
 						<option value="" disabled selected>Choose an avatar</option>
 						for _, avatar := range avatars {
-							<option value={ avatar.ID }>{ avatar.Name }</option>
+							<option value={avatar.ID}>{avatar.Name}</option>
 						}
 					</select>
 				</div>
+				
 				<div class="form-control">
 					<label class="label">
 						<span class="label-text">Select Observer</span>
@@ -56,10 +58,11 @@ templ SessionForm(scenarios []scenarios.Scenario, avatars []avatars.Avatar, obse
 					<select name="observer_id" class="select select-bordered w-full" required>
 						<option value="" disabled selected>Choose an observer</option>
 						for _, observer := range observers {
-							<option value={ observer.ID }>{ observer.Name }</option>
+							<option value={observer.ID}>{observer.Name}</option>
 						}
 					</select>
 				</div>
+				
 				<div class="card-actions justify-end mt-6">
 					<a href="/" class="btn btn-ghost">Cancel</a>
 					<button type="submit" class="btn btn-primary">Start Session</button>
@@ -85,24 +88,24 @@ templ SessionList(sessions []*Session) {
 			<tbody>
 				for _, session := range sessions {
 					<tr>
-						<td>{ formatTime(session.StartTime) }</td>
-						<td>{ session.ID }</td>
-						<td><span class={ "badge " + session.GetStatusClass() }>{ session.Status }</span></td>
-						<td>{ session.GetFormattedDuration() }</td>
+						<td>{formatTime(session.StartTime)}</td>
+						<td>{session.ID}</td>
+						<td><span class={"badge " + session.GetStatusClass()}>{session.Status}</span></td>
+						<td>{session.GetFormattedDuration()}</td>
 						<td class="space-x-2">
 							if session.Status == StatusRunning {
-								<button
+								<button 
 									class="btn btn-warning btn-xs"
-									hx-post={ fmt.Sprintf("/sessions/%s", session.ID) }
+									hx-post={fmt.Sprintf("/sessions/%s", session.ID)}
 									hx-vals='{"status": "paused"}'
 									hx-target="#recent-activity"
 									hx-swap="innerHTML"
 								>
 									Pause
 								</button>
-								<button
+								<button 
 									class="btn btn-success btn-xs"
-									hx-post={ fmt.Sprintf("/sessions/%s", session.ID) }
+									hx-post={fmt.Sprintf("/sessions/%s", session.ID)}
 									hx-vals='{"status": "completed"}'
 									hx-target="#recent-activity"
 									hx-swap="innerHTML"
@@ -110,18 +113,18 @@ templ SessionList(sessions []*Session) {
 									Complete
 								</button>
 							} else if session.Status == StatusPaused {
-								<button
+								<button 
 									class="btn btn-primary btn-xs"
-									hx-post={ fmt.Sprintf("/sessions/%s", session.ID) }
+									hx-post={fmt.Sprintf("/sessions/%s", session.ID)}
 									hx-vals='{"status": "running"}'
 									hx-target="#recent-activity"
 									hx-swap="innerHTML"
 								>
 									Resume
 								</button>
-								<button
+								<button 
 									class="btn btn-success btn-xs"
-									hx-post={ fmt.Sprintf("/sessions/%s", session.ID) }
+									hx-post={fmt.Sprintf("/sessions/%s", session.ID)}
 									hx-vals='{"status": "completed"}'
 									hx-target="#recent-activity"
 									hx-swap="innerHTML"
