@@ -1,4 +1,3 @@
-// Update to main.go to register session routes
 package main
 
 import (
